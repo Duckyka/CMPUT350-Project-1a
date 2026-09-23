@@ -2,12 +2,27 @@
 
 namespace CMPUT350 {
 
+// Helper: Convert RGBColor to SFML's sf::Color
+static sf::Color ToSFMLColor(const RGBColor& c) {
+    return sf::Color(c.r, c.g, c.b);
+}
+
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
     : mWindow(window), mFont(font) {}
 
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {}
 
-void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {}
+void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
+    if (!mWindow || !mFont) return;
+
+    sf::Text sfText(*mFont);
+    sfText.setString(text);
+    sfText.setCharacterSize(pixelSize);
+    sfText.setFillColor(ToSFMLColor(c));
+    sfText.setPosition(sf::Vector2f(p.x,p.y));
+
+    mWindow->draw(sfText);
+}
 
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {}
 
