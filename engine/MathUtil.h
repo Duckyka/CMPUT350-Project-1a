@@ -11,50 +11,80 @@ struct Point2D {
     Point2D(float x = 0, float y = 0) : x(x), y(y) {}
     double Distance(const Point2D &other) const {
         // TODO: write this code
-        return 0;
+        float deltaX = x - other.x;
+        float deltaY = y - other.y;
+        float distance = sqrt(((deltaX * deltaX) + (deltaY * deltaY)));
+        return distance;
     }
     Point2D operator+(const Point2D &other) const {
         // TODO: write this code
+        x + other.x;
+        y + other.y;
         return *this;
     }
     Point2D operator+(const float &other) const {
         // TODO: write this code
+        x + other;
+        y + other;
         return *this;
     }
     Point2D operator-(const Point2D &other) const {
         // TODO: write this code
+        x - other.x;
+        y - other.y;
         return *this;
     }
     Point2D operator-(const float &other) const {
         // TODO: write this code
+        x - other;
+        y - other;
         return *this;
     }
     Point2D operator*(const float &scalar) const {
         // TODO: write this code
+        x * scalar;
+        y * scalar;
         return *this;
     }
     Point2D &operator+=(const float &scalar) {
         // TODO: write this code
+        x = x + scalar;
+        y = y + scalar;
         return *this;
     }
     Point2D &operator+=(const Point2D &other) {
         // TODO: write this code
+        x = x + other.x;
+        y = y + other.y;
         return *this;
     }
     Point2D &operator-=(const Point2D &other) {
         // TODO: write this code
+        x = x - other.x;
+        y = y - other.y;
         return *this;
     }
     bool operator==(const Point2D &other) const {
         // TODO: write this code
-        return false;
+        if (*this == other)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     Point2D &operator*=(const int &scalar) {
         // TODO: write this code
+        x = x * scalar;
+        y = y * scalar;
         return *this;
     }
     Point2D &operator/=(const int &scalar) {
         // TODO: write this code
+        x = x / scalar;
+        y = y / scalar;
         return *this;
     }
     float operator*(const Point2D &other) const {

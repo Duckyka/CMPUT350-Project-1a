@@ -1,0 +1,2 @@
+C:\msys64\ucrt64\bin\ar.exe qc ..\sfml-build\lib\liboggd.a CMakeFiles/ogg.dir/Unity/unity_0_c.c.obj
+C:\msys64\ucrt64\bin\ranlib.exe ..\sfml-build\lib\liboggd.a
