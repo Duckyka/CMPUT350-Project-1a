@@ -1,5 +1,6 @@
 #include <random>
 #include "GameEngine.h"
+#include "MathUtil.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Stars.h"
@@ -113,6 +114,28 @@ std::mt19937 Ball::gen(rd());
 
 int main()
 {
+    // Test for ClosestPoint
+    // CMPUT350::Line testLine(CMPUT350::Point2D(0,0), CMPUT350::Point2D(10,0));
+    // CMPUT350::Point2D p1(5,5);
+    // CMPUT350::Point2D result1 = testLine.ClosestPoint(p1);
+    // std::cout << "Test 1 (Middle): (" << result1.x << ", " << result1.y << ")\n";
+
+    // Test for Crosses
+    CMPUT350::Line line1(0, 0, 10, 10);
+    CMPUT350::Line line2(0, 10, 10, 0);
+    CMPUT350::Point2D crossingPoint1;
+
+    bool result1 = line1.Crosses(line2, crossingPoint1);
+    std::cout << "Test 1 (Intersection): " << (result1 ? "True" : "False");
+    if (result1) {
+        std::cout << " at (" << crossingPoint1.x << ", " << crossingPoint1.y << ")\n";
+    } else {
+        std::cout << "\n";
+    }
+    // Expected output: True at (5, 5)
+
+    std::cout << "Line 1: " << line1;
+
     bool mBallSsample = true;
 
     if (mBallSsample)
