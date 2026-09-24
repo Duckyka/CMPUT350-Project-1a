@@ -77,23 +77,35 @@ struct Point2D {
     }
     Point2D &operator*=(const int &scalar) {
         // TODO: write this code
+        if (scalar == 0)
+        {
+            x = 0;
+            y = 0;
+            return *this;
+        }
         x = x * scalar;
         y = y * scalar;
         return *this;
     }
-    Point2D &operator/=(const int &scalar) {
+    Point2D &operator/=(const int &scalar) {                //Emit a warning for division by 0
         // TODO: write this code
+        
         x = x / scalar;
         y = y / scalar;
         return *this;
     }
     float operator*(const Point2D &other) const {
         // TODO: write this code
+        x * other.x;
+        y * other.y;
         return 0;
     }
     float Dot(Point2D b) const {
         // TODO: write this code
-        return 0;
+        float sum = 0;
+        sum += x * b.x;
+        sum += y * b.y;
+        return sum;
     }
     static float Dot(Point2D a, Point2D b) {
         // TODO: write this code
@@ -103,8 +115,19 @@ struct Point2D {
         // TODO: write this code
         return 0;
     }
-    void Normalize() {
+    void Normalize() {                              //Emit a warning for division by 0
         // TODO: write this code
+        float length = sqrt((x * x) + (y * y));
+        if (length == 0)
+        {
+            x = 0;
+            y = 0;
+        }
+        else
+        {
+            x = x / length;
+            y = y / length;
+        }
     }
 };
 

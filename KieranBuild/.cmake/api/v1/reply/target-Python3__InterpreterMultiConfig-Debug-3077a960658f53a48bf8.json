@@ -1,0 +1,74 @@
+{
+	"abstract" : true,
+	"artifacts" : 
+	[
+		{
+			"path" : "C:/Users/ducky/AppData/Local/Programs/Python/Python311/python.exe"
+		}
+	],
+	"backtrace" : 5,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"include",
+			"find_package"
+		],
+		"files" : 
+		[
+			"C:/Program Files/CMake/share/cmake-4.4/Modules/FindPython/Support.cmake",
+			"C:/Program Files/CMake/share/cmake-4.4/Modules/FindPython3.cmake",
+			"KieranBuild/_deps/mbedtls-src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 113,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 699,
+				"parent" : 2
+			},
+			{
+				"file" : 0,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 4453,
+				"parent" : 4
+			}
+		]
+	},
+	"codemodelVersion" : 
+	{
+		"major" : 2,
+		"minor" : 11
+	},
+	"id" : "Python3::InterpreterMultiConfig::@36d44abad58ef682ea5b",
+	"imported" : true,
+	"local" : true,
+	"name" : "Python3::InterpreterMultiConfig",
+	"nameOnDisk" : "python.exe",
+	"paths" : 
+	{
+		"build" : "_deps/mbedtls-build",
+		"source" : "KieranBuild/_deps/mbedtls-src"
+	},
+	"sources" : [],
+	"type" : "EXECUTABLE"
+}
