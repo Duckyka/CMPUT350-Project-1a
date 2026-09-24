@@ -1,0 +1,2 @@
+C:\msys64\ucrt64\bin\ar.exe qc libEngine.a CMakeFiles/Engine.dir/DrawContext.cpp.obj CMakeFiles/Engine.dir/GameEngine.cpp.obj CMakeFiles/Engine.dir/GameObject.cpp.obj CMakeFiles/Engine.dir/GraphicsObject.cpp.obj
+C:\msys64\ucrt64\bin\ranlib.exe libEngine.a

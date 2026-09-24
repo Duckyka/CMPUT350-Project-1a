@@ -1,0 +1,33 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/engine/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/System/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/Main/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/Window/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/Network/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/mbedtls-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/mbedtls-build/framework/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/mbedtls-build/include/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/mbedtls-build/library/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/mbedtls-build/pkgconfig/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/libssh2-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/libssh2-build/src/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/Graphics/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/freetype-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/harfbuzz-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sheenbidi-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/src/SFML/Audio/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/ogg-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/flac-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/flac-build/src/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/flac-build/src/libFLAC/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/vorbis-build/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/vorbis-build/lib/cmake_install.cmake",
+		"C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/galaga/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

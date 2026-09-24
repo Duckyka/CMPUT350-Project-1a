@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/freetype-src/src/base/ftver.rc
+windows.h
+-
+
