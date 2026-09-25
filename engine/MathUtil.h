@@ -1,6 +1,7 @@
 #ifndef MATHUTIL_H
 #define MATHUTIL_H
 
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -161,21 +162,90 @@ struct Line {
     Line(Point2D p1 = {0, 0}, Point2D p2 = {0, 0}) : p1(p1), p2(p2) {}
     Line(float x1, float y1, float x2, float y2) : p1(x1, y1), p2(x2, y2) {}
     float Length() const {
-        // TODO: write this code
-        return 0;
+        // The Length between two points p1 and p2
+        // Length = sqrt((x2-x1)^2 + (y2-y1)^2)
+        float length = 0;
+        double posX = (p2.x - p1.x) * (p2.x - p1.x);
+        double posY = (p2.y - p1.y) * (p2.y - p1.y);
+
+        length = sqrt(posX + posY);
+        //std::cout << "The length is " << length;
+        return length;
     }
     Point2D ClosestPoint(const Point2D &p) const {
-        // TODO: write this code
-        return p;
+        // Find closest point on the line from another point p
+        // 1) Find x (top) = p1p2 (ab) * p1p3 (ac) / |ab|
+        // ab = p2 - p1 = line of p1 to p2
+        Point2D ab = p2 - p1;
+        
+        // ac = p - p1 = line from p1 to p
+        Point2D ac = p - p1;
+
+        // bc = p - p2
+        Point2D bc = p - p2;
+
+        // If it is out of bounds on the bottom
+        if ((ac * ab) < 0.0f) {
+            return p1;
+        }
+
+        // If it is out of bounds at the top
+        if ((ab * bc) > 0.0f) {
+            return p2;
+        }
+
+        // Get the magnitude of ab
+        float magAB = p1.Distance(p2);
+        
+        // Check for division by zero, if so, then p1 and p2 are the same point
+        if (magAB == 0.0f) {
+            return p1;
+        }
+
+        // Find the projection distance
+        float x = (ab * ac) / magAB;
+        
+
+        // Calculate the point
+        float scalar = x / magAB;
+        Point2D answer = p1 + (ab * scalar);
+        return answer;
     }
     bool Crosses(Line other, Point2D &crossingPoint) const {
-        // TODO: write this code
-        return false;
+        // Get the direction vectors of the lines
+        Point2D vectorA = p2 - p1;
+        Point2D vectorB = other.p2 - other.p1;
+
+        // 1) Check for parallel lines
+        float crossProduct = Point2D::Cross(vectorA, vectorB);
+
+        if (crossProduct == 0) {
+            // The Lines are parallel.
+            return false;
+        }
+
+        // 2) Find t, u (scalars which is the percentage on the line)
+        // u = ((p1 - other.p1) x (vectorA) / (vectorB x vectorA)
+        float u = (Point2D::Cross((p1 - other.p1), vectorA)) / -crossProduct;
+
+        // t = ((other.p1 - p1) x vectorB) / (crossProduct)
+        float t = (Point2D::Cross((other.p1 - p1), vectorB)) / crossProduct;
+        
+        // Check if u and t are between [0, 1]
+        if (u < 0.0f || u > 1.0f || t < 0.0f || t > 1.0f) {
+            return false;
+        }
+
+        // Since u and t are in-bounds, there must be an intersection.
+        crossingPoint = p1 + (vectorA * t);
+
+        return true;
     }
 };
 
 static std::ostream &operator<<(std::ostream &os, const Line &l) {
     // TODO: write this code
+    os << "Line from (" << l.p1.x << "," << l.p1.y <<") to (" << l.p2.x << "," << l.p2.y << ")\n";
     return os;
 }
 
@@ -207,7 +277,19 @@ struct Rect {
         : topLeft(center.x - radius, center.y - radius), width(2 * radius), height(2 * radius) {}
 
     Rect &operator|=(const Rect &other) {
-        // TODO: write this code
+        // Bounding Box around both rectangles
+        // 1) Find the new Top-left corner
+        float topLeft_x = std::min(topLeft.x, other.topLeft.x);
+        float topLeft_y = std::min(topLeft.y, other.topLeft.y);
+
+        // Find the bottom Right
+        float bottomRight_x = std::max((topLeft.x + width), (other.topLeft.x + other.width));
+        float bottomRight_y = std::max((topLeft.y + height), (other.topLeft.y + other.height));
+        
+        topLeft.x = topLeft_x;
+        topLeft.y = topLeft_y;
+        width = bottomRight_x - topLeft_x;
+        height = bottomRight_y - topLeft_y;
         return *this;
     }
     Rect &operator|=(const Point2D &other) {
