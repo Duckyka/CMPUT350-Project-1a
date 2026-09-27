@@ -55,11 +55,11 @@ set_target_properties(FLAC::FLAC PROPERTIES
   INTERFACE_LINK_LIBRARIES "\$<\$<BOOL:1>:m>;Ogg::ogg;Threads::Threads"
 )
 
-# Import target "FLAC::FLAC" for configuration "Debug"
-set_property(TARGET FLAC::FLAC APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "FLAC::FLAC" for configuration "Release"
+set_property(TARGET FLAC::FLAC APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(FLAC::FLAC PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C;RC"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libFLACd.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C;RC"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libFLAC.a"
   )
 
 # Make sure the targets which have been exported in some other

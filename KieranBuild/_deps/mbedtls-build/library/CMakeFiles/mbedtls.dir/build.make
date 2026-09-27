@@ -365,32 +365,32 @@ mbedtls_OBJECTS = \
 # External object files for target mbedtls
 mbedtls_EXTERNAL_OBJECTS =
 
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/debug.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/mps_reader.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/mps_trace.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/net_sockets.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_cache.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_ciphersuites.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_client.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_cookie.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_debug_helpers_generated.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_msg.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_ticket.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls12_client.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls12_server.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_keys.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_server.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_client.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_generic.c.obj
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/build.make
-_deps/sfml-build/lib/libmbedtlsd.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\ducky\Documents\CMPUT350\CMPUT350-Project-1a\KieranBuild\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking C static library ..\..\sfml-build\lib\libmbedtlsd.a"
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/debug.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/mps_reader.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/mps_trace.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/net_sockets.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_cache.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_ciphersuites.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_client.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_cookie.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_debug_helpers_generated.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_msg.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_ticket.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls12_client.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls12_server.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_keys.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_server.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_client.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/ssl_tls13_generic.c.obj
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/build.make
+_deps/sfml-build/lib/libmbedtls.a: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/link.txt
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\ducky\Documents\CMPUT350\CMPUT350-Project-1a\KieranBuild\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Linking C static library ..\..\sfml-build\lib\libmbedtls.a"
 	cd /d C:\Users\ducky\Documents\CMPUT350\CMPUT350-Project-1a\KieranBuild\_deps\mbedtls-build\library && $(CMAKE_COMMAND) -P CMakeFiles\mbedtls.dir\cmake_clean_target.cmake
 	cd /d C:\Users\ducky\Documents\CMPUT350\CMPUT350-Project-1a\KieranBuild\_deps\mbedtls-build\library && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\mbedtls.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
-_deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/build: _deps/sfml-build/lib/libmbedtlsd.a
+_deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/build: _deps/sfml-build/lib/libmbedtls.a
 .PHONY : _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/build
 
 _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/clean:

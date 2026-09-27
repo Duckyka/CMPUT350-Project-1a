@@ -6,5 +6,5 @@ C_DEFINES =
 
 C_INCLUDES = @CMakeFiles\ogg.dir\includes_C.rsp
 
-C_FLAGS = -g -w
+C_FLAGS = -O3 -DNDEBUG -w
 

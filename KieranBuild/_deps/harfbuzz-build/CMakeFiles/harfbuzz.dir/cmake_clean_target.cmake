@@ -1,3 +1,3 @@
 file(REMOVE_RECURSE
-  "../sfml-build/lib/libharfbuzzd.a"
+  "../sfml-build/lib/libharfbuzz.a"
 )

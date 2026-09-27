@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "../sfml-build/lib/libfreetyped.a"
-  "../sfml-build/lib/libfreetyped.pdb"
+  "../sfml-build/lib/libfreetype.a"
+  "../sfml-build/lib/libfreetype.pdb"
   "CMakeFiles/freetype.dir/Unity/unity_0_c.c.obj"
   "CMakeFiles/freetype.dir/Unity/unity_0_c.c.obj.d"
   "CMakeFiles/freetype.dir/builds/windows/ftdebug.c.obj"

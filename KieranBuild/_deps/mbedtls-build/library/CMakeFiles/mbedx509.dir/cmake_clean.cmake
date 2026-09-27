@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "../../sfml-build/lib/libmbedx509d.a"
-  "../../sfml-build/lib/libmbedx509d.pdb"
+  "../../sfml-build/lib/libmbedx509.a"
+  "../../sfml-build/lib/libmbedx509.pdb"
   "CMakeFiles/mbedx509.dir/pkcs7.c.obj"
   "CMakeFiles/mbedx509.dir/pkcs7.c.obj.d"
   "CMakeFiles/mbedx509.dir/x509.c.obj"

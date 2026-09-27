@@ -53,11 +53,11 @@ set_target_properties(Ogg::ogg PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/ogg-src/include;C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/ogg-build/include"
 )
 
-# Import target "Ogg::ogg" for configuration "Debug"
-set_property(TARGET Ogg::ogg APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "Ogg::ogg" for configuration "Release"
+set_property(TARGET Ogg::ogg APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(Ogg::ogg PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/liboggd.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libogg.a"
   )
 
 # This file does not depend on other imported targets which have

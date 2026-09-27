@@ -6,5 +6,5 @@ C_DEFINES = -DSB_CONFIG_UNITY
 
 C_INCLUDES = @CMakeFiles\SheenBidi.dir\includes_C.rsp
 
-C_FLAGS = -g -w
+C_FLAGS = -O3 -DNDEBUG -w
 

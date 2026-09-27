@@ -6,5 +6,5 @@ CXX_DEFINES = -DHAVE_ATEXIT -DHAVE_FREETYPE=1 -DHAVE_GETPAGESIZE -DHAVE_ISATTY -
 
 CXX_INCLUDES = @CMakeFiles\harfbuzz.dir\includes_CXX.rsp
 
-CXX_FLAGS =  -fno-rtti -fno-exceptions -fno-threadsafe-statics -std=c++11 -g -std=c++11 -fno-keep-inline-dllexport -Wa,-mbig-obj -w
+CXX_FLAGS =  -fno-rtti -fno-exceptions -fno-threadsafe-statics -std=c++11 -O3 -DNDEBUG -std=c++11 -fno-keep-inline-dllexport -Wa,-mbig-obj -w
 

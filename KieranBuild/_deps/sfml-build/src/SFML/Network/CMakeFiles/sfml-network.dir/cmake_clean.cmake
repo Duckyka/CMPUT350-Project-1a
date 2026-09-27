@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "../../../lib/libsfml-network-s-d.a"
-  "../../../lib/libsfml-network-s-d.pdb"
+  "../../../lib/libsfml-network-s.a"
+  "../../../lib/libsfml-network-s.pdb"
   "CMakeFiles/sfml-network.dir/Dns.cpp.obj"
   "CMakeFiles/sfml-network.dir/Dns.cpp.obj.d"
   "CMakeFiles/sfml-network.dir/Ftp.cpp.obj"
