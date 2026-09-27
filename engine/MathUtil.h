@@ -293,36 +293,82 @@ struct Rect {
         return *this;
     }
     Rect &operator|=(const Point2D &other) {
-        // TODO: write this code
+        float topLeft_x = std::min(topLeft.x, other.x);
+        float topLeft_y = std::min(topLeft.y, other.y);
+
+        float bottomRight_x = std::max((topLeft.x + width), other.x);
+        float bottomRight_y = std::max((topLeft.y + height), other.y);
+
+        topLeft.x = topLeft_x;
+        topLeft.y = topLeft_y;
+        width = bottomRight_x - topLeft_x;
+        height = bottomRight_y - topLeft_y;
         return *this;
     }
     Rect &operator|=(const Line &other) {
-        // TODO: write this code
+        // Compare current bounds against BOTH line points
+        float newTopLeft_x = std::min({topLeft.x, other.p1.x, other.p2.x});
+        float newTopLeft_y = std::min({topLeft.y, other.p1.y, other.p2.y});
+
+        float bottomRight_x = std::max({topLeft.x + width, other.p1.x, other.p2.x});
+        float bottomRight_y = std::max({topLeft.y + height, other.p1.y, other.p2.y});
+
+        topLeft.x = newTopLeft_x;
+        topLeft.y = newTopLeft_y;
+        width = bottomRight_x - newTopLeft_x;
+        height = bottomRight_y - newTopLeft_y;
+
         return *this;
     }
     Rect &operator&=(const Rect &other) {
-        // TODO: write this code
+        // 1) Find the inner-most Top-Left corner
+        float newTopLeft_x = std::max(topLeft.x, other.topLeft.x);
+        float newTopLeft_y = std::max(topLeft.y, other.topLeft.y);
+
+        // 2) Find the inner-most Bottom-Right corner
+        float bottomRight_x = std::min(topLeft.x + width, other.topLeft.x + other.width);
+        float bottomRight_y = std::min(topLeft.y + height, other.topLeft.y + other.height);
+
+        // 3) Update variables
+        topLeft.x = newTopLeft_x;
+        topLeft.y = newTopLeft_y;
+        
+        // 4) Calculate new dimensions and clamp to 0 if they don't overlap
+        width = std::max(0.0f, bottomRight_x - newTopLeft_x);
+        height = std::max(0.0f, bottomRight_y - newTopLeft_y);
+
         return *this;
     }
     Rect &operator+=(const Point2D &other) {
-        // TODO: write this code
+        // Shifts the rectangle by the adding the point's coordinates to the top-left corner
+        topLeft += other;
         return *this;
     }
     Rect operator+(const Point2D &other) const {
-        // TODO: write this code
-        return *this;
+        // Creates a copy of the currently rectangle, shifts it, and returns the new copy
+        Rect result = *this;
+        result += other;
+        return result;
     }
     void Inset(int inset) {
-        // TODO: write this code
+        // Pushes all four edges inward by the inset amound
+        // The top-left corner moves down and right, while the overall size shrinks from both sides.
+        topLeft.x += inset;
+        topLeft.y += inset;
+        width -= (2 * inset);
+        height -= (2 * inset);
     }
     bool IsInside(const Point2D &p) const {
-        // TODO: write this code
-        return false;
+        // Checks if the target point's X and Y fall strictly within the rectangle's bounds
+        bool withinX = (p.x >= topLeft.x) && (p.x <= topLeft.x + width);
+        bool withinY = (p.y >= topLeft.y) && (p.y <= topLeft.y + height);
+        return withinX && withinY;
     }
 };
 
 static std::ostream &operator<<(std::ostream &os, const Rect &l) {
-    // TODO: write this code
+    os << "Rect(topLeft: (" << l.topLeft.x << ", " << l.topLeft.y 
+       << "), width: " << l.width << ", height: " << l.height << ")";
     return os;
 }
 
