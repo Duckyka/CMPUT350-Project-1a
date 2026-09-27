@@ -10,8 +10,7 @@ class GameEngine;
 #include "GameObject.h"
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
-//Is This Allowed????
-#include "GameContext.h"
+#include "DrawContext.h"
 
 namespace CMPUT350 {
 
@@ -36,7 +35,9 @@ public:
 private:
     std::shared_ptr<sf::RenderWindow> mWindow;
     std::shared_ptr<sf::Font> mFont;
-    GameContext mContext;
+    std::shared_ptr<DrawContext> mDrawContext;
+    std::vector<std::shared_ptr<GameObject>> mGameObjects;
+    std::vector<std::shared_ptr<GameObject>> mPendingGameObjects;
 };
 
 }  // namespace CMPUT350

@@ -1,45 +1,52 @@
 #include "GameEngine.h"
+#include "DrawContext.h"
+#include "FontData.h"
+#include "GraphicsObject.h"
+#include "GameContext.h"
+#include "CollisionObject.h"
+#include <algorithm>
+#include <vector>
 
 /// @brief
 namespace CMPUT350 {
-    #include "FontData.h"
-    #include <vector>
 
     GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
         // Sample font loading code
-        std::cout << "Test in GameEngine, in Init First: " << "\n";
-        // if (!mFont->openFromMemory(&_font, _font_len))
-        // {
-        //     std::cout << "FONT NOT LOADED\n";
-        //     fprintf(stderr, "WARNING: Font did not load.\n");
-        // }
-        std::cout << "Test in GameEngine, in Init Second: " << "\n";
-        mWindow.reset(new sf::RenderWindow(sf::VideoMode({width, height}), name));
+        //std::cout << "Test in GameEngine, in Init First: " << "\n";
+        //std::cout << "Test in GameEngine, in Init Second: " << "\n";
+        mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name);
         mWindow.get()->setFramerateLimit(30);
+        
+        // mWindow.reset(new sf::RenderWindow(sf::VideoMode({width, height}), name));
+        
+        // Load the font from embedded data
+        mFont = std::make_shared<sf::Font>();
+        mFont->openFromMemory(_font, sizeof(_font));
         std::cout << "Test in GameEngine, in Init Third: " << "\n";
-        DrawContext mDraw(mWindow, mFont);
-        *mContext.ScreenContext = mDraw;
+
+        mDrawContext = std::make_shared<DrawContext>(mWindow, mFont);
+        
     }
 
     GameEngine::~GameEngine() {
         // Cleanup resources
-        while (waitingObjects.size() != 0)
-        {
-            waitingObjects.pop_back();
-        }
-        while (activeObjects.size() != 0)
-        {
-            activeObjects.back().Kill();
-            activeObjects.back().~GameObject();
-            activeObjects.pop_back();
-        }
+        // while (waitingObjects.size() != 0)
+        // {
+        //     waitingObjects.pop_back();
+        // }
+        // while (activeObjects.size() != 0)
+        // {
+        //     activeObjects.back().Kill();
+        //     activeObjects.back().~GameObject();
+        //     activeObjects.pop_back();
+        // }
         // mWindow->close();
         mWindow->close();
     }
 
     void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject)
     {
-        waitingObjects.push_back(*gameObject);
+        mPendingGameObjects.push_back(gameObject);
     }
 
 /**
@@ -49,54 +56,75 @@ namespace CMPUT350 {
  * all objects have been destroyed.
     */
     void GameEngine::Run() {
-        while (true)  // window is open
+        GameContext context;
+        context.mEngineView = this;
+        context.ScreenContext = mDrawContext.get();
+
+        while (mWindow->isOpen())  // window is open
         {
             std::cout << "Testing Run()\n";
-            std::cout << "ActiveList: " << activeObjects.data() << "\n";
-            std::cout << "WaitingList: " << waitingObjects.data() << "\n";
+            //std::cout << "ActiveList: " << activeObjects.data() << "\n";
+            //std::cout << "WaitingList: " << waitingObjects.data() << "\n";
             // 0. Remove any objects that are now dead
-            int currentSize = activeObjects.size();
-            for (int i = currentSize - 1; i >= 0; i--)
-            {
-                if (!activeObjects[i].IsAlive())
+            for (int i = static_cast<int>(mGameObjects.size()) - 1; i >= 0; --i) {
+                if (!mGameObjects[i]->IsAlive())
                 {
-                    activeObjects.erase(activeObjects.begin() + i);
+                    mGameObjects.erase(mGameObjects.begin() + i);
                 }
             }
 
             // 1. Activate and initialize any objects added during the last frame
-            // while (waitingObjects.size() != 0)
-            // {
-            //     GameObject temp = waitingObjects.back();
-            //     waitingObjects.pop_back();
-            //     temp(mContext);                              //Not sure what gameContext to pass to initialize gameObjects--------
-            //     activeObjects.push_back(temp);
-            // }
+            for (auto &obj : mPendingGameObjects) {
+                obj->Initialize(&context);
+                mGameObjects.push_back(obj);
+            }
+            mPendingGameObjects.clear();
 
             // 2. Process events
-            // while (const std::optional event = mWindow->pollEvent())
-            // {
-            //     if (event->is<sf::Event::Closed>())
-            //     {
-            //         this->~GameEngine();
-            //     }
-            //     else if (event->is<sf::Event::Resized>())
-            //     {
-            //         continue;
-            //     }
-            //     else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-            //     {
-            //         continue;
-            //     }
-            // }
+            while (const std::optional event = mWindow->pollEvent())
+            {
+                if (event->is<sf::Event::Closed>())
+                {
+                   mWindow->close();
+                }
+                else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
+                    // TODO: dispatch to game objects' HandleKeyEvent
+                }
+            }
 
             // 3. Update game objects
-            // for (GameObject object: activeObjects)
-            // {
-            //     object.Update(GameContext);
-            // }
+            for (auto object: mGameObjects)
+            {
+                object->Update(&context);
+            }
 
             // 4. Process collision events
+            std::vector<std::shared_ptr<CollisionObject>> collidables;
+            for (auto &obj : mGameObjects)
+            {
+                auto c = std::dynamic_pointer_cast<CollisionObject>(obj);
+                if (c) collidables.push_back(c);
+            }
+            for (size_t i = 0; i < collidables.size(); ++i)
+            {
+                for (size_t j = i + 1; j < collidables.size(); ++j)
+                {
+                    const Rect &r1 = collidables[i]->GetBounds();
+                    const Rect &r2 = collidables[j]->GetBounds();
+                    bool overlap = !(
+                        (r1.topLeft.x + r1.width) < r2.topLeft.x ||
+                        r1.topLeft.x > (r2.topLeft.x + r2.width) ||
+                        (r1.topLeft.y + r1.height) < r2.topLeft.y ||
+                        r1.topLeft.y > (r2.topLeft.y + r2.height)
+                    );
+                    if (overlap)
+                    {
+                        collidables[i]->CollisionEnter(collidables[j]);
+                        collidables[j]->CollisionEnter(collidables[i]);
+                    }
+                }
+            }
+
             // std::vector<CollisionObject> tempCollisionObjects;
             // tempCollisionObjects.clear();
             // for (GameObject object: activeObjects)
@@ -131,44 +159,31 @@ namespace CMPUT350 {
             // }
 
             // 5. Late updates
-            // for (GameObject object: activeObjects)
-            // {
-            //     object.LateUpdate(GameContext);
-            // }
+            for (auto &object: mGameObjects)
+            {
+                object->LateUpdate(&context);
+            }
 
             // Clear window
-            // mWindow->clear();
+            mWindow->clear();
 
             // 6. Render background
-            // std::vector<CollisionObject> tempGraphicsObjects;
-            // tempGraphicsObjects.clear();
-            // for (GameObject object: activeObjects)
-            // {
-            //     std::shared_ptr<GraphicsObject> objA = std::dynamic_pointer_cast<GraphicsObject>(object);
-            //     if (objA == nullptr)
-            //     {
-            //         continue; //Not a graphics object, therefore skip. 
-            //     }
-            //     else    //It is a graphics object, render to the screen
-            //     {
-            //         tempGraphicsObjects.push_back(objA);
-            //     }
-            // }
-            // for (GraphicsObject object: tempGraphicsObjects)
-            // {
-            //     object.RenderBackground();
-            // }
+            // Step 6: render background
+            for (auto &obj : mGameObjects)
+            {
+                auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
+                if (g) g->RenderBackground(&context);
+            }
 
-            // 7. Render foreground
-            // for (GraphicsObject object: tempGraphicsObjects)
-            // {
-            //     object.RenderForeground();
-            // }
+            // Step 7: render foreground
+            for (auto &obj : mGameObjects)
+            {
+                auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
+                if (g) g->RenderForeground(&context);
+            }
 
             // Actually render to window
-            //mWindow->display();
-
-            break;
+            mWindow->display();
         }
     }
 
