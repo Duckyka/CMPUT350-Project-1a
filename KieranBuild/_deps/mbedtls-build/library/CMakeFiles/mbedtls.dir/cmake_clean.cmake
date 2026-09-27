@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "../../sfml-build/lib/libmbedtlsd.a"
-  "../../sfml-build/lib/libmbedtlsd.pdb"
+  "../../sfml-build/lib/libmbedtls.a"
+  "../../sfml-build/lib/libmbedtls.pdb"
   "CMakeFiles/mbedtls.dir/debug.c.obj"
   "CMakeFiles/mbedtls.dir/debug.c.obj.d"
   "CMakeFiles/mbedtls.dir/mps_reader.c.obj"

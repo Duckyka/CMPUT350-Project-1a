@@ -6,5 +6,5 @@ CXX_DEFINES = -DSFML_STATIC
 
 CXX_INCLUDES = @CMakeFiles\Project1.dir\includes_CXX.rsp
 
-CXX_FLAGS = -g -std=c++20
+CXX_FLAGS = -O3 -DNDEBUG -std=c++20
 

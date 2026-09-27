@@ -6,5 +6,5 @@ CXX_DEFINES = -DFLAC__NO_DLL -DMA_NO_ENCODING -DMA_NO_FLAC -DMA_NO_GENERATION -D
 
 CXX_INCLUDES = @CMakeFiles\sfml-audio.dir\includes_CXX.rsp
 
-CXX_FLAGS = -g -std=c++20 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wsuggest-override -Wnull-dereference -Wold-style-cast -Wpedantic -Wmisleading-indentation -Wduplicated-cond -Wlogical-op -Wduplicated-branches
+CXX_FLAGS = -O3 -DNDEBUG -std=c++20 -fvisibility=hidden -fno-keep-inline-dllexport -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wcast-align -Wunused -Woverloaded-virtual -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wimplicit-fallthrough -Wsuggest-override -Wnull-dereference -Wold-style-cast -Wpedantic -Wmisleading-indentation -Wduplicated-cond -Wlogical-op -Wduplicated-branches
 

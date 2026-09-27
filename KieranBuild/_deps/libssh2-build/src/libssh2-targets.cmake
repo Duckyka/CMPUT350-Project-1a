@@ -55,11 +55,11 @@ set_target_properties(libssh2::libssh2_static PROPERTIES
   INTERFACE_LINK_LIBRARIES "\$<LINK_ONLY:ws2_32>"
 )
 
-# Import target "libssh2::libssh2_static" for configuration "Debug"
-set_property(TARGET libssh2::libssh2_static APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "libssh2::libssh2_static" for configuration "Release"
+set_property(TARGET libssh2::libssh2_static APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(libssh2::libssh2_static PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libssh2.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libssh2.a"
   )
 
 # This file does not depend on other imported targets which have

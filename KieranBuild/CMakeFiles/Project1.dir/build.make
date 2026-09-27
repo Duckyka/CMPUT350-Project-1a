@@ -164,11 +164,11 @@ Project1.exe: CMakeFiles/Project1.dir/galaga/Stars.cpp.obj
 Project1.exe: CMakeFiles/Project1.dir/galaga/main.cpp.obj
 Project1.exe: CMakeFiles/Project1.dir/build.make
 Project1.exe: engine/libEngine.a
-Project1.exe: _deps/sfml-build/lib/libsfml-graphics-s-d.a
-Project1.exe: _deps/sfml-build/lib/libsfml-window-s-d.a
-Project1.exe: _deps/sfml-build/lib/libsfml-system-s-d.a
-Project1.exe: _deps/sfml-build/lib/libharfbuzzd.a
-Project1.exe: _deps/sfml-build/lib/libfreetyped.a
+Project1.exe: _deps/sfml-build/lib/libsfml-graphics-s.a
+Project1.exe: _deps/sfml-build/lib/libsfml-window-s.a
+Project1.exe: _deps/sfml-build/lib/libsfml-system-s.a
+Project1.exe: _deps/sfml-build/lib/libharfbuzz.a
+Project1.exe: _deps/sfml-build/lib/libfreetype.a
 Project1.exe: CMakeFiles/Project1.dir/linkLibs.rsp
 Project1.exe: CMakeFiles/Project1.dir/objects1.rsp
 Project1.exe: CMakeFiles/Project1.dir/link.txt

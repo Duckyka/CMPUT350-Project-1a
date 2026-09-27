@@ -70,25 +70,25 @@ set_target_properties(MbedTLS::mbedtls PROPERTIES
   INTERFACE_LINK_LIBRARIES "ws2_32;bcrypt;MbedTLS::mbedx509"
 )
 
-# Import target "MbedTLS::mbedcrypto" for configuration "Debug"
-set_property(TARGET MbedTLS::mbedcrypto APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "MbedTLS::mbedcrypto" for configuration "Release"
+set_property(TARGET MbedTLS::mbedcrypto APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(MbedTLS::mbedcrypto PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedcryptod.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedcrypto.a"
   )
 
-# Import target "MbedTLS::mbedx509" for configuration "Debug"
-set_property(TARGET MbedTLS::mbedx509 APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "MbedTLS::mbedx509" for configuration "Release"
+set_property(TARGET MbedTLS::mbedx509 APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(MbedTLS::mbedx509 PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedx509d.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedx509.a"
   )
 
-# Import target "MbedTLS::mbedtls" for configuration "Debug"
-set_property(TARGET MbedTLS::mbedtls APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
+# Import target "MbedTLS::mbedtls" for configuration "Release"
+set_property(TARGET MbedTLS::mbedtls APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(MbedTLS::mbedtls PROPERTIES
-  IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "C"
-  IMPORTED_LOCATION_DEBUG "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedtlsd.a"
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
+  IMPORTED_LOCATION_RELEASE "C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/KieranBuild/_deps/sfml-build/lib/libmbedtls.a"
   )
 
 # This file does not depend on other imported targets which have

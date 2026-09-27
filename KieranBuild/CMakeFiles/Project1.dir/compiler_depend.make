@@ -96,6 +96,7 @@ CMakeFiles/Project1.dir/galaga/Bullet.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/assert.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/algorithm \
   C:/msys64/ucrt64/include/c++/15.2.0/array \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/auto_ptr.h \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/binders.h \
@@ -165,6 +166,7 @@ CMakeFiles/Project1.dir/galaga/Bullet.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ptr_traits.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/quoted_string.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_base.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_cmp.h \
@@ -255,6 +257,7 @@ CMakeFiles/Project1.dir/galaga/Bullet.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/c++/15.2.0/optional \
   C:/msys64/ucrt64/include/c++/15.2.0/ostream \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/pstl_config.h \
   C:/msys64/ucrt64/include/c++/15.2.0/ratio \
@@ -436,6 +439,7 @@ CMakeFiles/Project1.dir/galaga/Enemy.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/assert.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/algorithm \
   C:/msys64/ucrt64/include/c++/15.2.0/array \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/auto_ptr.h \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/binders.h \
@@ -505,6 +509,7 @@ CMakeFiles/Project1.dir/galaga/Enemy.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ptr_traits.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/quoted_string.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_base.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_cmp.h \
@@ -595,6 +600,7 @@ CMakeFiles/Project1.dir/galaga/Enemy.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/c++/15.2.0/optional \
   C:/msys64/ucrt64/include/c++/15.2.0/ostream \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/pstl_config.h \
   C:/msys64/ucrt64/include/c++/15.2.0/ratio \
@@ -777,6 +783,7 @@ CMakeFiles/Project1.dir/galaga/Player.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/assert.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/algorithm \
   C:/msys64/ucrt64/include/c++/15.2.0/array \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/auto_ptr.h \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/binders.h \
@@ -846,6 +853,7 @@ CMakeFiles/Project1.dir/galaga/Player.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ptr_traits.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/quoted_string.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_base.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_cmp.h \
@@ -936,6 +944,7 @@ CMakeFiles/Project1.dir/galaga/Player.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/include/c++/15.2.0/optional \
   C:/msys64/ucrt64/include/c++/15.2.0/ostream \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/pstl_config.h \
   C:/msys64/ucrt64/include/c++/15.2.0/ratio \
@@ -1117,6 +1126,7 @@ CMakeFiles/Project1.dir/galaga/Stars.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/assert.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/algorithm \
   C:/msys64/ucrt64/include/c++/15.2.0/array \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/auto_ptr.h \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/binders.h \
@@ -1188,6 +1198,7 @@ CMakeFiles/Project1.dir/galaga/Stars.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/c++/15.2.0/bits/random.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/random.tcc \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_base.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_cmp.h \
@@ -1280,6 +1291,7 @@ CMakeFiles/Project1.dir/galaga/Stars.cpp.obj: C:/Users/ducky/Documents/CMPUT350/
   C:/msys64/ucrt64/include/c++/15.2.0/optional \
   C:/msys64/ucrt64/include/c++/15.2.0/ostream \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_numeric_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/pstl_config.h \
@@ -1470,6 +1482,7 @@ CMakeFiles/Project1.dir/galaga/main.cpp.obj: C:/Users/ducky/Documents/CMPUT350/C
   C:/msys64/ucrt64/include/_mingw_stat64.h \
   C:/msys64/ucrt64/include/_timeval.h \
   C:/msys64/ucrt64/include/assert.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/algorithm \
   C:/msys64/ucrt64/include/c++/15.2.0/array \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/auto_ptr.h \
   C:/msys64/ucrt64/include/c++/15.2.0/backward/binders.h \
@@ -1541,6 +1554,7 @@ CMakeFiles/Project1.dir/galaga/main.cpp.obj: C:/Users/ducky/Documents/CMPUT350/C
   C:/msys64/ucrt64/include/c++/15.2.0/bits/random.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/random.tcc \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_base.h \
   C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_cmp.h \
@@ -1633,6 +1647,7 @@ CMakeFiles/Project1.dir/galaga/main.cpp.obj: C:/Users/ducky/Documents/CMPUT350/C
   C:/msys64/ucrt64/include/c++/15.2.0/optional \
   C:/msys64/ucrt64/include/c++/15.2.0/ostream \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h \
+  C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_numeric_defs.h \
   C:/msys64/ucrt64/include/c++/15.2.0/pstl/pstl_config.h \
@@ -1992,6 +2007,8 @@ C:/msys64/ucrt64/include/_timeval.h:
 
 C:/msys64/ucrt64/include/assert.h:
 
+C:/msys64/ucrt64/include/c++/15.2.0/algorithm:
+
 C:/msys64/ucrt64/include/c++/15.2.0/bits/unique_ptr.h:
 
 C:/msys64/ucrt64/include/c++/15.2.0/array:
@@ -2149,6 +2166,12 @@ C:/msys64/ucrt64/include/c++/15.2.0/bits/ptr_traits.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/emmintrin.h:
 
 C:/msys64/ucrt64/include/c++/15.2.0/bits/range_access.h:
+
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Enemy.cpp:
+
+C:/msys64/ucrt64/include/c++/15.2.0/ratio:
+
+C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algo.h:
 
 C:/msys64/ucrt64/include/c++/15.2.0/bits/ranges_algobase.h:
 
@@ -2316,11 +2339,9 @@ C:/msys64/ucrt64/include/c++/15.2.0/x86_64-w64-mingw32/bits/error_constants.h:
 
 C:/msys64/ucrt64/include/c++/15.2.0/pstl/execution_defs.h:
 
+C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_algorithm_defs.h:
+
 C:/msys64/ucrt64/include/c++/15.2.0/pstl/glue_memory_defs.h:
-
-C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Enemy.cpp:
-
-C:/msys64/ucrt64/include/c++/15.2.0/ratio:
 
 C:/msys64/ucrt64/include/c++/15.2.0/span:
 
