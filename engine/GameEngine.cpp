@@ -88,7 +88,24 @@ namespace CMPUT350 {
                    mWindow->close();
                 }
                 else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
+                    std::cout << "Key Pressed\n";
                     // TODO: dispatch to game objects' HandleKeyEvent
+                    // if (keyPressed->unicode == 'a')
+                    // {
+                    //     std::cout << "Pressed a\n";
+                    // }
+                    // else if (keyPressed->unicode == 'd')
+                    // {
+                    //     std::cout << "Pressed d\n";
+                    // }
+                    // else if (keyPressed->unicode == ' ')
+                    // {
+                    //     std::cout << "Pressed space\n";
+                    // }
+                    for (GameObject object: activeObjects)
+                    {
+                        object.HandleKeyEvent(&context, keyPressed->unicode);
+                    }
                 }
             }
 
