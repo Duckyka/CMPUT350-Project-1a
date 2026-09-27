@@ -2,7 +2,9 @@
 
 namespace CMPUT350 {
 
-void GameObject::Initialize(GameContext *context) { return; }
+void GameObject::Initialize(GameContext *context) { 
+    return;
+}
 void GameObject::Update(GameContext *context) { return; }
 void GameObject::LateUpdate(GameContext *context) { return; }
 void GameObject::RenderUI(GameContext *contextrender) { return; }

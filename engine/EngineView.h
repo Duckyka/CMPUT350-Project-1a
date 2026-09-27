@@ -10,6 +10,7 @@ class GameObject;
 
 class EngineView {
 public:
+    virtual ~EngineView() = default;
     virtual void AddGameObject(std::shared_ptr<GameObject> gameObject) = 0;
 };
 
