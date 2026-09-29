@@ -25,11 +25,6 @@ public:
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
 
-private:
-    CMPUT350::Rect mBounds;
-    CMPUT350::Rect shipWingBounds;
-    CMPUT350::Rect ShipFrontBounds;
-    bool mAlive = true;
 };
 
 #endif
