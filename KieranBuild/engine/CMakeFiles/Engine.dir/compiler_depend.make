@@ -672,10 +672,14 @@ engine/CMakeFiles/Engine.dir/GameEngine.cpp.obj: C:/Users/ducky/Documents/CMPUT3
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/CollisionObject.h \
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/DrawContext.h \
   C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/EngineView.h \
   C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/FontData.h \
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameContext.h \
   C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameEngine.h \
   C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameObject.h \
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GraphicsObject.h \
   C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/MathUtil.h
 
 engine/CMakeFiles/Engine.dir/GameObject.cpp.obj: C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameObject.cpp \
@@ -1368,8 +1372,12 @@ C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/DrawContext.h:
 
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/MathUtil.h:
 
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/CollisionObject.h:
+
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameContext.h:
+
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GameEngine.h:
 
-C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GraphicsObject.cpp:
-
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GraphicsObject.h:
+
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/engine/GraphicsObject.cpp:

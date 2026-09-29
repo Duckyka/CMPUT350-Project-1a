@@ -89,6 +89,10 @@ namespace CMPUT350 {
                 }
                 else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
                     // TODO: dispatch to game objects' HandleKeyEvent
+                    for (auto &object: mGameObjects)
+                    {
+                        object->HandleKeyEvent(&context, keyPressed->unicode);
+                    }
                 }
             }
 
