@@ -15,6 +15,8 @@ Player::Player(CMPUT350::Point2D loc)
         loc.y - kPlayerHeight / 2.0f
     );
     mBounds = CMPUT350::Rect(topLeft, kPlayerWidth, kPlayerHeight);
+    shipWingBounds = CMPUT350::Rect({topLeft.x - 15, topLeft.y + 25}, kPlayerWidth + 30, kPlayerHeight - 28);
+    ShipFrontBounds = CMPUT350::Rect({topLeft.x + 14, topLeft.y - 15}, kPlayerWidth - 28, kPlayerHeight + 18);
 }
 
 void Player::Initialize(CMPUT350::GameContext* context)
@@ -31,20 +33,31 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
 
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
-    std::cout << "In Player HandleKeyEvent()\n";
     if (key == 'a')
     {
-        std::cout << "A pressed, Move left\n";
-        return true;
+        std::cout << context->ScreenContext->GetWindowWidth() << "\n";
+        if (mBounds.topLeft.x > 0)
+        {
+            mBounds.topLeft.x -= 10;
+            shipWingBounds.topLeft.x -= 10;
+            ShipFrontBounds.topLeft.x -= 10;
+            return true;
+        }
+        else { return false; }
     }
     else if (key == 'd')
     {
-        std::cout << "D pressed, Move right\n";
-        return true;
+        if (mBounds.topLeft.x < (context->ScreenContext->GetWindowWidth() - 40))
+        {
+            mBounds.topLeft.x += 10;
+            shipWingBounds.topLeft.x += 10;
+            ShipFrontBounds.topLeft.x += 10;
+            return true;
+        }
+        else { return false; }
     }
     else if (key == ' ')
     {
-        std::cout << "Space pressed, Shoot a bullet (if possible)\n";
         return true;
     }
     else
@@ -60,6 +73,8 @@ void Player::RenderBackground(CMPUT350::GameContext* context)
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::gray);
+    context->ScreenContext->DrawRect(shipWingBounds, CMPUT350::Colors::gray);
+    context->ScreenContext->DrawRect(ShipFrontBounds, CMPUT350::Colors::gray);
 }
 
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)

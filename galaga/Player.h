@@ -27,6 +27,8 @@ public:
 
 private:
     CMPUT350::Rect mBounds;
+    CMPUT350::Rect shipWingBounds;
+    CMPUT350::Rect ShipFrontBounds;
     bool mAlive = true;
 };
 
