@@ -342,7 +342,8 @@ CMakeFiles/Project1.dir/galaga/Bullet.cpp.obj: C:/Users/ducky/Documents/CMPUT350
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
-  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Bullet.h
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Bullet.h \
+  C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Player.h
 
 CMakeFiles/Project1.dir/galaga/Enemy.cpp.obj: C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Enemy.cpp \
   _deps/sfml-src/include/SFML/Config.hpp \
@@ -2453,11 +2454,11 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h:
 
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Bullet.h:
 
+C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Player.h:
+
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Enemy.h:
 
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Player.cpp:
-
-C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Player.h:
 
 C:/Users/ducky/Documents/CMPUT350/CMPUT350-Project-1a/galaga/Stars.cpp:
 

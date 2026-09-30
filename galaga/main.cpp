@@ -129,9 +129,7 @@ int main()
     }
     else
     {
-        std::cout << "Test in Main, Zero: " << "\n";
         CMPUT350::GameEngine engine(768, 1024, "Galaga");
-        std::cout << "Test in Main, First: " << "\n";
         auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
