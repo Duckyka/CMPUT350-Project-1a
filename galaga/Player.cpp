@@ -35,7 +35,6 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     if (key == 'a')
     {
-        std::cout << context->ScreenContext->GetWindowWidth() << "\n";
         if (mBounds.topLeft.x > 0)
         {
             mBounds.topLeft.x -= 10;
