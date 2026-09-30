@@ -2,8 +2,8 @@
 #include "Bullet.h"
 
 namespace {
-    constexpr float kEnemyWidth = 40.0f;
-    constexpr float kEnemyHeight = 40.0f;
+    constexpr float kEnemyWidth = 30.0f;
+    constexpr float kEnemyHeight = 25.0f;
 }
 
 Enemy::Enemy(CMPUT350::Point2D loc)

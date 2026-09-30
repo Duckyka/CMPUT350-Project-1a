@@ -1116,7 +1116,7 @@
 				{
 					"directoryIndex" : 19,
 					"id" : "sfml-audio::@a153e5727587c53fce98",
-					"jsonFile" : "target-sfml-audio-Release-de1dd22042265109f1a0.json",
+					"jsonFile" : "target-sfml-audio-Release-b9dbe40825b4c959b2bb.json",
 					"name" : "sfml-audio",
 					"projectIndex" : 1
 				},
@@ -1137,7 +1137,7 @@
 				{
 					"directoryIndex" : 7,
 					"id" : "sfml-network::@d7f79968b2699e7782cb",
-					"jsonFile" : "target-sfml-network-Release-cc97e334dbb70ecf25aa.json",
+					"jsonFile" : "target-sfml-network-Release-bc9f9881ccf4041763af.json",
 					"name" : "sfml-network",
 					"projectIndex" : 1
 				},
