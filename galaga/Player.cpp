@@ -58,6 +58,17 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     }
     else if (key == ' ')
     {
+        // Spawn at the horizontal center of the ship
+        CMPUT350::Point2D firePosition(
+            mBounds.topLeft.x + mBounds.width / 2.0f,
+            ShipFrontBounds.topLeft.y - 5.0f
+        );
+
+        // Screen y grows downward, so "up" is (0, -1)
+        CMPUT350::Point2D direction(0.0f, -1.0f);
+
+        context->mEngineView->AddGameObject(
+            std::make_shared<Bullet>(firePosition, direction, true));
         return true;
     }
     else
