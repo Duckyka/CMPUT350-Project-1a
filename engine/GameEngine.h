@@ -18,8 +18,6 @@ class DrawContext;
 
 class GameEngine : public EngineView {
 public:
-    std::vector<GameObject> activeObjects;
-    std::vector<GameObject> waitingObjects;
     GameEngine(unsigned int width, unsigned int height, const std::string& name);
     ~GameEngine();
 

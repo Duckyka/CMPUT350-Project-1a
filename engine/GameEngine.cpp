@@ -12,17 +12,12 @@ namespace CMPUT350 {
 
     GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
         // Sample font loading code
-        //std::cout << "Test in GameEngine, in Init First: " << "\n";
-        //std::cout << "Test in GameEngine, in Init Second: " << "\n";
         mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name);
         mWindow.get()->setFramerateLimit(30);
-        
-        // mWindow.reset(new sf::RenderWindow(sf::VideoMode({width, height}), name));
-        
+                
         // Load the font from embedded data
         mFont = std::make_shared<sf::Font>();
         mFont->openFromMemory(_font, sizeof(_font));
-        std::cout << "Test in GameEngine, in Init Third: " << "\n";
 
         mDrawContext = std::make_shared<DrawContext>(mWindow, mFont);
         
@@ -30,17 +25,6 @@ namespace CMPUT350 {
 
     GameEngine::~GameEngine() {
         // Cleanup resources
-        // while (waitingObjects.size() != 0)
-        // {
-        //     waitingObjects.pop_back();
-        // }
-        // while (activeObjects.size() != 0)
-        // {
-        //     activeObjects.back().Kill();
-        //     activeObjects.back().~GameObject();
-        //     activeObjects.pop_back();
-        // }
-        // mWindow->close();
         mWindow->close();
     }
 
@@ -62,9 +46,6 @@ namespace CMPUT350 {
 
         while (mWindow->isOpen())  // window is open
         {
-            std::cout << "Testing Run()\n";
-            //std::cout << "ActiveList: " << activeObjects.data() << "\n";
-            //std::cout << "WaitingList: " << waitingObjects.data() << "\n";
             // 0. Remove any objects that are now dead
             for (int i = static_cast<int>(mGameObjects.size()) - 1; i >= 0; --i) {
                 if (!mGameObjects[i]->IsAlive())
@@ -129,39 +110,6 @@ namespace CMPUT350 {
                 }
             }
 
-            // std::vector<CollisionObject> tempCollisionObjects;
-            // tempCollisionObjects.clear();
-            // for (GameObject object: activeObjects)
-            // {
-            //     std::shared_ptr<CollisionObject> objA = std::dynamic_pointer_cast<CollisionObject>(object);
-            //     if (objA == nullptr)
-            //     {
-            //         continue; //Not a collision object, therefore skip. 
-            //     }
-            //     else    //It is a collision object, check for collisions
-            //     {
-            //         tempCollisionObjects.push_back(objA);
-            //     }
-            // }
-
-            // for (CollisionObject object1: tempCollisionObjects)
-            // {
-            //     for (CollisionObject object2: tempCollisionObjects)
-            //     {
-            //         if (object1 != object2)
-            //         {
-            //             // CHECK FOR COLLISIONS BY CHECKING IF THEY DON'T COLLIDE
-            //             //if (
-            //             //      (r1.rect.topLeft.x + r1.rect.width) < r2.rect.topLeft.x ||      (if r1 is left of r2)
-            //             //      r1.rect.topLeft.x > (r2.rect.topLeft.x + r2.rect.width) ||      (if r1 is right of r2)
-            //             //      (r1.rect.topLeft.y + r1.rect.height) < r2.rect.topLeft.x ||     (if r1 is to the top of r2)
-            //             //      r1.rect.topleft.y > (r2.rect.topleft.y + r2.rect.height)        (if r1 is to the bottom of r2)
-            //             //    )
-            //             // DO SOMETHING IF THEY DO COLLIDE
-            //         }
-            //     }
-            // }
-
             // 5. Late updates
             for (auto &object: mGameObjects)
             {
@@ -172,14 +120,13 @@ namespace CMPUT350 {
             mWindow->clear();
 
             // 6. Render background
-            // Step 6: render background
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
                 if (g) g->RenderBackground(&context);
             }
 
-            // Step 7: render foreground
+            // 7. Render foreground
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
