@@ -29,6 +29,8 @@ public:
 private:
     CMPUT350::Rect mBounds;
     bool mAlive = true;
+    static constexpr float kEnemyWidth = 40.0f;
+    static constexpr float kEnemyHeight = 30.0f;
 };
 
 

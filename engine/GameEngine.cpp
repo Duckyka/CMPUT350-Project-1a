@@ -13,11 +13,15 @@ namespace CMPUT350 {
     GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
         // Sample font loading code
         mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name);
-        mWindow.get()->setFramerateLimit(30);
-                
+        mWindow->setFramerateLimit(30);
+        
+        // mWindow.reset(new sf::RenderWindow(sf::VideoMode({width, height}), name));
+        
         // Load the font from embedded data
         mFont = std::make_shared<sf::Font>();
-        mFont->openFromMemory(_font, sizeof(_font));
+        if (mFont->openFromMemory(_font, sizeof(_font))) {
+            std::cerr << "Failed to load font\n";
+        }
 
         mDrawContext = std::make_shared<DrawContext>(mWindow, mFont);
         
@@ -47,19 +51,28 @@ namespace CMPUT350 {
         while (mWindow->isOpen())  // window is open
         {
             // 0. Remove any objects that are now dead
-            for (int i = static_cast<int>(mGameObjects.size()) - 1; i >= 0; --i) {
-                if (!mGameObjects[i]->IsAlive())
+            size_t i = 0;
+            while (i < mGameObjects.size())
+            {
+                if (mGameObjects[i]->IsAlive())
                 {
-                    mGameObjects.erase(mGameObjects.begin() + i);
+                    i++;
+                }
+                else
+                {
+                    // Replace the dead object with the last object, then shrink the vector
+                    mGameObjects[i] = mGameObjects.back();
+                    mGameObjects.pop_back();
                 }
             }
 
             // 1. Activate and initialize any objects added during the last frame
-            for (auto &obj : mPendingGameObjects) {
+            std::vector<std::shared_ptr<GameObject>> toAdd;
+            toAdd.swap(mPendingGameObjects); 
+            for (auto& obj : toAdd) {
                 obj->Initialize(&context);
                 mGameObjects.push_back(obj);
             }
-            mPendingGameObjects.clear();
 
             // 2. Process events
             while (const std::optional event = mWindow->pollEvent())
@@ -70,9 +83,12 @@ namespace CMPUT350 {
                 }
                 else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
                     // TODO: dispatch to game objects' HandleKeyEvent
-                    for (auto &object: mGameObjects)
-                    {
-                        object->HandleKeyEvent(&context, keyPressed->unicode);
+                    if (keyPressed->unicode < 128) {
+                        char key = static_cast<char>(keyPressed->unicode);
+                        for (auto &object: mGameObjects)
+                        {
+                            object->HandleKeyEvent(&context, key);
+                        }
                     }
                 }
             }

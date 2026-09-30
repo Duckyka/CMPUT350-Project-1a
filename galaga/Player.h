@@ -3,6 +3,8 @@
 
 #include "CollisionObject.h"
 
+class Bullet;
+
 class Player : public CMPUT350::CollisionObject
 {
 public:
@@ -30,6 +32,8 @@ private:
     CMPUT350::Rect shipWingBounds;
     CMPUT350::Rect ShipFrontBounds;
     bool mAlive = true;
+    static constexpr int kMaxBullets = 2;
+    std::array<std::weak_ptr<Bullet>, kMaxBullets> mBullets;
 };
 
 #endif
