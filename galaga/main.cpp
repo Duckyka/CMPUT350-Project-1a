@@ -5,6 +5,10 @@
 #include "Enemy.h"
 #include "Stars.h"
 
+const int numRows = 5;
+const int numCols = 8;
+const float screenWidth = 768.0f;
+
 class Ball : public CMPUT350::CollisionObject
 {
 public:
@@ -114,30 +118,6 @@ std::mt19937 Ball::gen(rd());
 
 int main()
 {
-    // Test for ClosestPoint
-    // CMPUT350::Line testLine(CMPUT350::Point2D(0,0), CMPUT350::Point2D(10,0));
-    // CMPUT350::Point2D p1(5,5);
-    // CMPUT350::Point2D result1 = testLine.ClosestPoint(p1);
-    // std::cout << "Test 1 (Middle): (" << result1.x << ", " << result1.y << ")\n";
-
-    // Test for Crosses
-    CMPUT350::Line line1(0, 0, 10, 10);
-    CMPUT350::Line line2(0, 10, 10, 0);
-    CMPUT350::Point2D crossingPoint1;
-
-    bool result1 = line1.Crosses(line2, crossingPoint1);
-    std::cout << "Test 1 (Intersection): " << (result1 ? "True" : "False");
-    if (result1) {
-        std::cout << " at (" << crossingPoint1.x << ", " << crossingPoint1.y << ")\n";
-    } else {
-        std::cout << "\n";
-    }
-    // Expected output: True at (5, 5)
-
-    std::cout << "Line 1: " << line1;
-    
-    //return 0;
-
     bool mBallSsample = false;
 
     if (mBallSsample)
@@ -156,11 +136,21 @@ int main()
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
         std::cout << "Test in Main, Second: " << "\n";
-        for (int x = 0; x < 4; x++)
-        {
-            auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(100 + x * 200, 100));
-            engine.AddGameObject(enemy);
+        
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                // Each column gets 96 pixels wide of a slot
+                float slotWidth = screenWidth / numCols;
+                float x = slotWidth / 2 + col * slotWidth;
+
+                // Rows start near the top and are 60 pixels apart
+                float y = 80 + row * 60;
+
+                auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(x,y));
+                engine.AddGameObject(enemy);
+            }
         }
+
         std::cout << "Test in Main, Third before Run(): " << "\n";
         engine.Run();
     }

@@ -33,7 +33,7 @@ private:
     bool mAlive;
     CMPUT350::Rect mBounds;
     
-    static constexpr float kSpeed = 5.0f; // Adjustable
-    static constexpr int kSize = 4;
+    static constexpr float kSpeed = 20.0f; // Adjustable
+    static constexpr int kSize = 6;
 };
 #endif // BULLET_H
