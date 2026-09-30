@@ -55,7 +55,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
         }
         else { return false; }
     }
-    else if (key == ' ')
+    if (key == ' ')
     {
         // Spawn at the horizontal center of the ship
         CMPUT350::Point2D firePosition(
@@ -70,10 +70,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
             std::make_shared<Bullet>(firePosition, direction, true));
         return true;
     }
-    else
-    {
-        return false;
-    }
+    return false;
 }
 
 void Player::RenderBackground(CMPUT350::GameContext* context)
