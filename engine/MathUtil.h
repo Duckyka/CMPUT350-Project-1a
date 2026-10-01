@@ -10,6 +10,12 @@ namespace CMPUT350 {
 struct Point2D {
     float x, y;
     Point2D(float x = 0, float y = 0) : x(x), y(y) {}
+
+    /**
+     * @brief Returns the distance between two Point2D objects
+     *
+     * @param other Second Point2D value to compare with the current Point2D
+     */
     double Distance(const Point2D &other) const {
         // TODO: write this code
         float deltaX = x - other.x;
@@ -17,6 +23,11 @@ struct Point2D {
         float distance = sqrt(((deltaX * deltaX) + (deltaY * deltaY)));
         return distance;
     }
+    /**
+     * @brief Adds two Point2D objects together
+     *
+     * @param other Second Point2D value to add to the current Point2D
+     */
     Point2D operator+(const Point2D &other) const {
         // TODO: write this code
         Point2D temp(0, 0);
@@ -24,6 +35,11 @@ struct Point2D {
         temp.y = y + other.y;
         return temp;
     }
+    /**
+     * @brief Adds a float to a Point2D object
+     *
+     * @param other Second float value to add to the current Point2D
+     */
     Point2D operator+(const float &other) const {
         // TODO: write this code
         Point2D temp(0, 0);
@@ -31,6 +47,11 @@ struct Point2D {
         temp.y = y + other;
         return temp;
     }
+    /**
+     * @brief Subtracts two Point2D objects
+     *
+     * @param other Second Point2D value to subtract from the current Point2D
+     */
     Point2D operator-(const Point2D &other) const {
         // TODO: write this code
         Point2D temp(0, 0);
@@ -38,6 +59,11 @@ struct Point2D {
         temp.y = y - other.y;
         return temp;
     }
+    /**
+     * @brief Subtracts a float from a Point2D object
+     *
+     * @param other Second float value to subtract from the current Point2D
+     */
     Point2D operator-(const float &other) const {
         // TODO: write this code
         Point2D temp(0, 0);
@@ -45,6 +71,11 @@ struct Point2D {
         temp.y = y - other;
         return temp;
     }
+    /**
+     * @brief Multiplies a float to a Point2D object
+     *
+     * @param scalar Float value to multiply with the current Point2D
+     */
     Point2D operator*(const float &scalar) const {
         // TODO: write this code
         Point2D temp(0, 0);
@@ -52,24 +83,44 @@ struct Point2D {
         temp.y = y * scalar;
         return temp;
     }
+    /**
+     * @brief Adds a float to and updates to a Point2D object
+     *
+     * @param scalar Float value to add to the current Point2D
+     */
     Point2D &operator+=(const float &scalar) {
         // TODO: write this code
         x = x + scalar;
         y = y + scalar;
         return *this;
     }
+    /**
+     * @brief Adds a second Point2D to and updates to a Point2D object
+     *
+     * @param other Point2D value to add to the current Point2D
+     */
     Point2D &operator+=(const Point2D &other) {
         // TODO: write this code
         x = x + other.x;
         y = y + other.y;
         return *this;
     }
+    /**
+     * @brief Subtracts from and updates to a Point2D object
+     *
+     * @param other Float value to subtract to the current Point2D
+     */
     Point2D &operator-=(const Point2D &other) {
         // TODO: write this code
         x = x - other.x;
         y = y - other.y;
         return *this;
     }
+    /**
+     * @brief Checks whether two Point2D objects are equivalent or not
+     *
+     * @param other Point2D value to check to the current Point2D
+     */
     bool operator==(const Point2D &other) const {
         // TODO: write this code
         if (x == other.x && y == other.y)
@@ -81,6 +132,11 @@ struct Point2D {
             return false;
         }
     }
+    /**
+     * @brief Multiplies with and updates to a Point2D object
+     *
+     * @param scalar Float value to multiply with the current Point2D
+     */
     Point2D &operator*=(const int &scalar) {
         // TODO: write this code
         if (scalar == 0)
@@ -96,13 +152,22 @@ struct Point2D {
             return *this;
         }
     }
-    Point2D &operator/=(const int &scalar) {                //Emit a warning for division by 0
+    /**
+     * @brief Divides from and updates to a Point2D object.
+     *
+     * @param scalar Float value to divide from the current Point2D
+     */
+    Point2D &operator/=(const int &scalar) {
         // TODO: write this code
-        
         x = x / scalar;
         y = y / scalar;
         return *this;
     }
+    /**
+     * @brief Calculates the dot product of two Point2D objects
+     *
+     * @param other Point2D value to calculate the dot product with the current Point2D
+     */
     float operator*(const Point2D &other) const {
         // TODO: write this code
         float sum = 0;
@@ -110,6 +175,11 @@ struct Point2D {
         sum += y * other.y;
         return sum;
     }
+    /**
+     * @brief Calculates the dot product of two Point2D objects
+     *
+     * @param other Point2D value to calculate the dot product with the current Point2D
+     */
     float Dot(Point2D b) const {
         // TODO: write this code
         float sum = 0;
@@ -117,6 +187,12 @@ struct Point2D {
         sum += y * b.y;
         return sum;
     }
+    /**
+     * @brief Calculates the dot product of two Point2D objects. Static Function. 
+     *
+     * @param a Point2D value to calculate the dot product with the other Point2D
+     * @param b Point2D value to calculate the dot product with the other Point2D
+     */
     static float Dot(Point2D a, Point2D b) {
         // TODO: write this code
         float sum = 0;
@@ -124,12 +200,21 @@ struct Point2D {
         sum += a.y * b.y;
         return sum;
     }
+    /**
+     * @brief Calculates the cross product of two Point2D objects. Static Function. 
+     *
+     * @param a Point2D value to calculate the cross product with the other Point2D
+     * @param b Point2D value to calculate the cross product with the other Point2D
+     */
     static float Cross(Point2D a, Point2D b) {
         // TODO: write this code
         float sum = 0;
         sum += ((a.x * b.y) - (b.x * a.y));
         return sum;
     }
+    /**
+     * @brief Calculates the normalized value of a Point2D object
+     */
     void Normalize() {                              //Emit a warning for division by 0
         // TODO: write this code
         float length = sqrt((x * x) + (y * y));
@@ -156,6 +241,7 @@ static Point2D operator*(float number, const Point2D &rhs) {
     return rhs;
 }
 
+//Line class, the vector between two Point2D objects
 struct Line {
     Point2D p1, p2;
 
