@@ -38,6 +38,8 @@ private:
     int mCooldown = 0;
     static constexpr int kFireDelay = 8;
     static constexpr int kMaxBullets = 2;
+    static constexpr float kPlayerWidth = 40.0f;
+    static constexpr float kPlayerHeight = 40.0f;
 
     std::array<std::weak_ptr<Bullet>, kMaxBullets> mBullets;
 

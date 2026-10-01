@@ -134,6 +134,7 @@ int main()
         engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
         
+        // Add the 40 enemies
         for (int row = 0; row < numRows; row++) {
             for (int col = 0; col < numCols; col++) {
                 // Each column gets 96 pixels wide of a slot

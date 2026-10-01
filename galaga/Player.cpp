@@ -1,12 +1,12 @@
-#include <cassert>
 #include "Player.h"
 #include "Bullet.h"
 
-namespace {
-    constexpr float kPlayerWidth = 40.0f;
-    constexpr float kPlayerHeight = 40.0f;
-}
-
+/*
+Initialize the Player's Bounding Boxes
+Input: loc - the center of the ship in screen pixels.
+Output: none. Sets mBounds (body), shipWingBounds, and ShipFrontBounds (nose)
+        so the three rectangles together form the ship
+*/
 Player::Player(CMPUT350::Point2D loc)
 {
     // loc is the center, find top left corner
@@ -19,10 +19,21 @@ Player::Player(CMPUT350::Point2D loc)
     ShipFrontBounds = CMPUT350::Rect({topLeft.x + 14, topLeft.y - 15}, kPlayerWidth - 28, kPlayerHeight + 18);
 }
 
+/*
+Called once by the engine wheen the Player is added to the game.
+Left empty because the constructor already sets up all of the Player's state
+*/
 void Player::Initialize(CMPUT350::GameContext* context)
 {
 }
 
+/*
+Called once per frame, after all key events have been handled.
+Input: context - gives access to the engine (to add bullets).
+Output: none. Counts down the fire cooldown and, if the player asked
+        to fire, spawns a bullet when the cooldown is over and one of 
+        the two bullet slots is free (its weak_ptr has expired).
+*/
 void Player::Update(CMPUT350::GameContext* context)
 {
     if (mCooldown > 0) {
@@ -51,10 +62,23 @@ void Player::Update(CMPUT350::GameContext* context)
     mFireRequested = false; 
 }
 
+/*
+Called once per frame after collisions have been processed
+Left empty because the Player has no logic that depends on the
+result of collisions, handles in Project 1b.
+*/
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
 }
 
+/*
+Handle a key press sent by the engine.
+Input: context - gives access to the screen size
+       key - the ASCII character that was pressed
+Output: true if the Player used the key, false otherwise
+        'a' moves left and 'd' moves right (10 pixels, kept on screen)
+        ' ' only sets mFireRequested, the bullet is created in Update.
+*/
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     if (key == 'a')
@@ -90,13 +114,22 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
         return false;
     }
     
-    
 }
 
+/*
+Draw anything that must appear behind other objects.
+Left empty because the ship is drawn in foreground, so the Player has nothing to
+put in the background.
+*/
 void Player::RenderBackground(CMPUT350::GameContext* context)
 {
 }
 
+/*
+Draw the ship in the foreground layer.
+Input: context - gives access to the DrawContext
+Output: none. Draws the body, wings, and nose as gray rectangles
+*/
 void Player::RenderForeground(CMPUT350::GameContext* context)
 {
     context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::gray);
@@ -104,21 +137,36 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
     context->ScreenContext->DrawRect(ShipFrontBounds, CMPUT350::Colors::gray);
 }
 
+/*
+Called by the engine when the Player's bounding box overlaps another object.
+TODO in project 1b
+*/
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
 }
 
+/*
+Mark the Player as dead
+Output: none. The engine removes the Player at the start of the next frame.
+*/
 void Player::Kill()
 {
     mAlive = false;
 }
 
+/*
+Output: true while the Player is alive. The engine uses this to decide
+        when to remove the object
+*/
 bool Player::IsAlive() const
 {
-    // TODO: Update code
     return mAlive;
 }
 
+/*
+Output: the Player's main bounding box (the body). The engine uses it
+        for collision checks. The wings and nose are not included.
+*/
 const CMPUT350::Rect& Player::GetBounds()
 {
     // TODO: Update code
