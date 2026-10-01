@@ -854,8 +854,8 @@ _deps/sfml-build/src/SFML/Window/CMakeFiles/sfml-window.dir/clean:
 
 # All Build rule for target.
 _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/sfml-build/src/SFML/System/CMakeFiles/sfml-system.dir/all
-_deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/all
 _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/mbedtls-build/library/CMakeFiles/mbedcrypto.dir/all
+_deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/mbedtls-build/library/CMakeFiles/mbedtls.dir/all
 _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/mbedtls-build/library/CMakeFiles/mbedx509.dir/all
 _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/all: _deps/libssh2-build/src/CMakeFiles/libssh2_static.dir/all
 	$(MAKE) $(MAKESILENT) -f _deps\sfml-build\src\SFML\Network\CMakeFiles\sfml-network.dir\build.make _deps/sfml-build/src/SFML/Network/CMakeFiles/sfml-network.dir/depend

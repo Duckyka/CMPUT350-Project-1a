@@ -81,16 +81,43 @@ namespace CMPUT350 {
                 {
                    mWindow->close();
                 }
-                else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
-                    // TODO: dispatch to game objects' HandleKeyEvent
-                    if (keyPressed->unicode < 128) {
-                        char key = static_cast<char>(keyPressed->unicode);
+                else
+                {
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
+                    {
+                        char key = *" ";
+                        for (auto &object: mGameObjects)
+                        {
+                            object->HandleKeyEvent(&context, key);
+                        }
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))
+                    {
+                        char key = *"a";
+                        for (auto &object: mGameObjects)
+                        {
+                            object->HandleKeyEvent(&context, key);
+                        }
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D))
+                    {
+                        char key = *"d";
                         for (auto &object: mGameObjects)
                         {
                             object->HandleKeyEvent(&context, key);
                         }
                     }
                 }
+                // else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
+                //     // TODO: dispatch to game objects' HandleKeyEvent
+                //     if (keyPressed->unicode < 128) {
+                //         char key = static_cast<char>(keyPressed->unicode);
+                //         for (auto &object: mGameObjects)
+                //         {
+                //             object->HandleKeyEvent(&context, key);
+                //         }
+                //     }
+                // }
             }
 
             // 3. Update game objects
