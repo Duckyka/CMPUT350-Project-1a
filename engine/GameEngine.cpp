@@ -10,6 +10,7 @@
 /// @brief
 namespace CMPUT350 {
 
+    //Initializer, creates RenderWindow, DrawContext and loads Font from memory
     GameEngine::GameEngine(unsigned int width, unsigned int height, const std::string& name) {
         // Sample font loading code
         mWindow = std::make_shared<sf::RenderWindow>(sf::VideoMode({width, height}), name);
@@ -27,11 +28,13 @@ namespace CMPUT350 {
         
     }
 
+    //Destructor for GameEngine
     GameEngine::~GameEngine() {
         // Cleanup resources
         mWindow->close();
     }
 
+    //Adds GameObjects to a list which will be initialized and added upon the next iteration of the game loop in Run()
     void GameEngine::AddGameObject(std::shared_ptr<GameObject> gameObject)
     {
         mPendingGameObjects.push_back(gameObject);
@@ -108,16 +111,6 @@ namespace CMPUT350 {
                         }
                     }
                 }
-                // else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>()) {
-                //     // TODO: dispatch to game objects' HandleKeyEvent
-                //     if (keyPressed->unicode < 128) {
-                //         char key = static_cast<char>(keyPressed->unicode);
-                //         for (auto &object: mGameObjects)
-                //         {
-                //             object->HandleKeyEvent(&context, key);
-                //         }
-                //     }
-                // }
             }
 
             // 3. Update game objects
@@ -137,6 +130,7 @@ namespace CMPUT350 {
             {
                 for (size_t j = i + 1; j < collidables.size(); ++j)
                 {
+                    //Check if not colliding to determine if objects do collide
                     const Rect &r1 = collidables[i]->GetBounds();
                     const Rect &r2 = collidables[j]->GetBounds();
                     bool overlap = !(
@@ -180,24 +174,4 @@ namespace CMPUT350 {
             mWindow->display();
         }
     }
-
-// Sample code for processing events
-
-// bool GameEngine::ProcessEvents(GameContext *context)
-//{
-//	while (const std::optional event = mWindow->pollEvent())
-//	{
-//		if (event->is<sf::Event::Closed>())
-//		{
-//		}
-//		else if (event->is<sf::Event::Resized>())
-//		{
-//		}
-//		else if (const auto* keyPressed = event->getIf<sf::Event::TextEntered>())
-//		{
-//			// use keyPressed->unicode to get character
-//		}
-//	}
-// }
-
 }  // namespace CMPUT350

@@ -3,14 +3,28 @@
 
 namespace CMPUT350 {
 
-// Helper: Convert RGBColor to SFML's sf::Color
+/**
+ * @brief Helper: Convert RGBColor to SFML's sf::Color
+ *
+ * @param c An RGB type colour
+ */
 static sf::Color ToSFMLColor(const RGBColor& c) {
     return sf::Color(c.r, c.g, c.b);
 }
 
+//Initializer
 DrawContext::DrawContext(std::shared_ptr<sf::RenderWindow> window, std::shared_ptr<sf::Font> font)
     : mWindow(window), mFont(font) {}
 
+
+/**
+ * @brief Takes in text and draws in the center to the screen using the loaded font
+ *
+ * @param text Text input to write to the screen
+ * @param pixelSize Int value for the size of the text
+ * @param p Point2D of the text position to draw to
+ * @param c RGB colour for the text
+ */
 void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
     if (!mWindow || !mFont) return;
 
@@ -30,6 +44,15 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
 
     mWindow->draw(sfText);
 }
+
+/**
+ * @brief Takes in text and draws to the screen using the loaded font
+ *
+ * @param text Text input to write to the screen
+ * @param pixelSize Int value for the size of the text
+ * @param p Point2D of the text position to draw to
+ * @param c RGB colour for the text
+ */
 void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RGBColor c) {
     if (!mWindow || !mFont) return;
 
@@ -42,6 +65,13 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
     mWindow->draw(sfText);
 }
 
+/**
+ * @brief Takes in a point and radius and draws to the screen a circle
+ *
+ * @param p Point2D of the circle position to draw to
+ * @param radius Float value for the size of the circle's radius
+ * @param c RGB colour for the circle
+ */
 void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     if (!mWindow) return;
 
@@ -53,6 +83,12 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     mWindow->draw(circle);
 }
 
+/**
+ * @brief Takes in a rectangle and draws to the screen
+ *
+ * @param r Rect to draw to the screen
+ * @param c RGB colour for the rectangle
+ */
 void DrawContext::DrawRect(Rect r, RGBColor c) {
     if (!mWindow) return;
 
@@ -63,6 +99,13 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
     mWindow->draw(rectangle);
 }
 
+/**
+ * @brief Takes in a rect to draw to the screen and outlines it in a frame
+ *
+ * @param r Rect to draw to the screen
+ * @param width Float value for the size of the rectangle's outline
+ * @param c RGB colour for the rectangle
+ */
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
     if (!mWindow) return;
 
@@ -122,8 +165,10 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
 
 }
 
+//Returns the window width
 int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 
+//Returns the window height
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
 }  // namespace CMPUT350
