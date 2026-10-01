@@ -56,7 +56,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
         }
         else { return false; }
     }
-    if (key == ' ')
+    else if (key == ' ')
     {
         for (auto& slot : mBullets) {
             if (slot.expired()) {

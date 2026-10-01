@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include "CollisionObject.h"
+#include <array>
+#include <memory>
 
 class Bullet;
 
