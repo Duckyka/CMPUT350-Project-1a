@@ -19,7 +19,7 @@ namespace CMPUT350 {
         
         // Load the font from embedded data
         mFont = std::make_shared<sf::Font>();
-        if (mFont->openFromMemory(_font, sizeof(_font))) {
+        if (!mFont->openFromMemory(_font, sizeof(_font))) {
             std::cerr << "Failed to load font\n";
         }
 

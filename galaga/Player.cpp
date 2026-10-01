@@ -25,6 +25,30 @@ void Player::Initialize(CMPUT350::GameContext* context)
 
 void Player::Update(CMPUT350::GameContext* context)
 {
+    if (mCooldown > 0) {
+        mCooldown--;
+    }
+
+    // Fire here so the bullet uses the ship's position afte this frame's movement
+    if (mFireRequested && mCooldown == 0) {
+        for (auto& slot : mBullets) {
+            if (slot.expired()) {
+                CMPUT350::Point2D firePosition(
+                    mBounds.topLeft.x + mBounds.width / 2.0f,
+                    ShipFrontBounds.topLeft.y - 5.0f
+                );
+                CMPUT350::Point2D direction(0.0f, -1.0f);
+
+                auto bullet = std::make_shared<Bullet>(firePosition, direction, true);
+                slot = bullet;
+                context->mEngineView->AddGameObject(bullet);
+
+                mCooldown = kFireDelay;
+                break;
+            }
+        }
+    }
+    mFireRequested = false; 
 }
 
 void Player::LateUpdate(CMPUT350::GameContext* context)
@@ -58,23 +82,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     }
     else if (key == ' ')
     {
-        for (auto& slot : mBullets) {
-            if (slot.expired()) {
-                // Spawn at the horizontal center of the ship
-                CMPUT350::Point2D firePosition(
-                    mBounds.topLeft.x + mBounds.width / 2.0f,
-                    ShipFrontBounds.topLeft.y - 5.0f
-                );
-
-                // Screen y grows downward, so "up" is (0, -1)
-                CMPUT350::Point2D direction(0.0f, -1.0f);
-
-                auto bullet = std::make_shared<Bullet>(firePosition, direction, true);
-                slot = bullet;
-                context->mEngineView->AddGameObject(bullet);
-                return true;
-            }
-        }
+        mFireRequested = true;
         return true;
     }
     else

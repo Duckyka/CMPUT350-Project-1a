@@ -34,8 +34,13 @@ private:
     CMPUT350::Rect shipWingBounds;
     CMPUT350::Rect ShipFrontBounds;
     bool mAlive = true;
+    bool mFireRequested = false;
+    int mCooldown = 0;
+    static constexpr int kFireDelay = 8;
     static constexpr int kMaxBullets = 2;
+
     std::array<std::weak_ptr<Bullet>, kMaxBullets> mBullets;
+
 };
 
 #endif
