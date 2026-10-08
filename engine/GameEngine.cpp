@@ -4,6 +4,8 @@
 #include "GraphicsObject.h"
 #include "GameContext.h"
 #include "CollisionObject.h"
+#include "NotificationManager.h"
+#include "Keyboard.h"
 #include <algorithm>
 #include <vector>
 
@@ -39,6 +41,37 @@ namespace CMPUT350 {
     {
         mPendingGameObjects.push_back(gameObject);
     }
+
+    void GameEngine::InstallKeyDownNotification(int keyCode, const std::string &notification)
+    {
+        
+    }
+
+    void GameEngine::InstallKeyUpNotification(int keyCode, const std::string &notification)
+    {
+
+    }
+
+    GameEngine::const_iterator GameEngine::cbegin() const
+    {
+
+    }
+
+    GameEngine::const_iterator GameEngine::cend() const
+    {
+
+    }
+
+    GameEngine::const_iterator GameEngine::begin() const
+    {
+
+    }
+
+    GameEngine::const_iterator GameEngine::end() const
+    {
+
+    }
+
 
 /**
  * @method Run

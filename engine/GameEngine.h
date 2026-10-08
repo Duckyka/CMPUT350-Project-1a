@@ -11,6 +11,7 @@ class GameEngine;
 #include "MathUtil.h"
 #include <SFML/Graphics.hpp>
 #include "DrawContext.h"
+#include "NotificationManager.h"
 
 namespace CMPUT350 {
 
@@ -27,6 +28,14 @@ public:
     GameEngine& operator=(GameEngine&&) = delete;       // Prevent move-assignment
 
     void AddGameObject(std::shared_ptr<GameObject> gameObject) override;
+    void InstallKeyDownNotification(int, const std::string &notification) override;
+	void InstallKeyUpNotification(int, const std::string &notification) override;
+    using tGameObject = std::vector<std::shared_ptr<GameObject>>;
+	using const_iterator = tGameObject::const_iterator;
+	const_iterator cbegin() const override;
+	const_iterator cend() const override;
+	const_iterator begin() const override;
+	const_iterator end() const override;
 
     void Run();
 
@@ -36,6 +45,7 @@ private:
     std::shared_ptr<DrawContext> mDrawContext;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingGameObjects;
+    std::unordered_map<std::string, std::vector<std::weak_ptr<GameObject>>> mListeners;
 };
 
 }  // namespace CMPUT350
