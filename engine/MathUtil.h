@@ -157,7 +157,7 @@ struct Point2D {
      *
      * @param scalar Float value to divide from the current Point2D
      */
-    Point2D &operator/=(const int &scalar) {
+    Point2D &operator/=(const float &scalar) {
         // TODO: write this code
         x = x / scalar;
         y = y / scalar;
@@ -238,7 +238,7 @@ static std::ostream &operator<<(std::ostream &os, const Point2D &p) {   //------
 
 static Point2D operator*(float number, const Point2D &rhs) {    //-------------------------------------------------------------
     // TODO: write this code
-    return rhs;
+    return Point2D(rhs.x * number, rhs.y * number);
 }
 
 //Line class, the vector between two Point2D objects
