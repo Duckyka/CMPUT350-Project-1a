@@ -4,6 +4,8 @@
 #include "GraphicsObject.h"
 #include "GameContext.h"
 #include "CollisionObject.h"
+#include "NotificationManager.h"
+#include "Keyboard.h"
 #include <algorithm>
 #include <vector>
 
@@ -25,7 +27,6 @@ namespace CMPUT350 {
         }
 
         mDrawContext = std::make_shared<DrawContext>(mWindow, mFont);
-        
     }
 
     //Destructor for GameEngine
@@ -40,6 +41,38 @@ namespace CMPUT350 {
         mPendingGameObjects.push_back(gameObject);
     }
 
+    void GameEngine::InstallKeyDownNotification(int keyCode, const std::string &notification)
+    {
+        std::cout << "KeyCode, String: " << keyCode << ", " << notification << "\n";
+
+    }
+
+    void GameEngine::InstallKeyUpNotification(int keyCode, const std::string &notification)
+    {
+
+    }
+
+    GameEngine::const_iterator GameEngine::cbegin() const
+    {
+        return this->mGameObjects.cbegin();
+    }
+
+    GameEngine::const_iterator GameEngine::cend() const
+    {
+        return this->mGameObjects.cend();
+    }
+
+    GameEngine::const_iterator GameEngine::begin() const
+    {
+        return this->mGameObjects.begin();
+    }
+
+    GameEngine::const_iterator GameEngine::end() const
+    {
+        return this->mGameObjects.end();
+    }
+
+
 /**
  * @method Run
  * @arguments None
@@ -47,9 +80,13 @@ namespace CMPUT350 {
  * all objects have been destroyed.
     */
     void GameEngine::Run() {
+        
         GameContext context;
+        NotificationManager notificationManager;
         context.mEngineView = this;
         context.ScreenContext = mDrawContext.get();
+        context.mNotificationManager = &notificationManager;
+        context.currentFrame = 0;       //Frame 0 or 1 to start??
 
         while (mWindow->isOpen())  // window is open
         {
@@ -86,29 +123,30 @@ namespace CMPUT350 {
                 }
                 else
                 {
+                    std::string Shoot = "Shoot";
+                    std::string Left = "MoveLeft";
+                    std::string Right = "MoveRight";
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
                     {
-                        char key = *" ";
-                        for (auto &object: mGameObjects)
-                        {
-                            object->HandleKeyEvent(&context, key);
-                        }
+                        InstallKeyDownNotification(Key::Space, Shoot);
                     }
+
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))
                     {
-                        char key = *"a";
-                        for (auto &object: mGameObjects)
-                        {
-                            object->HandleKeyEvent(&context, key);
-                        }
+                        InstallKeyDownNotification(Key::A, Left);
                     }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Left))
+                    {
+                        InstallKeyDownNotification(Key::Left, Left);
+                    }
+
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D))
                     {
-                        char key = *"d";
-                        for (auto &object: mGameObjects)
-                        {
-                            object->HandleKeyEvent(&context, key);
-                        }
+                        InstallKeyDownNotification(Key::D, Right);
+                    }
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Right))
+                    {
+                        InstallKeyDownNotification(Key::Right, Right);
                     }
                 }
             }
@@ -153,17 +191,23 @@ namespace CMPUT350 {
                 object->LateUpdate(&context);
             }
 
+            // 6. Get offsets and rotations
+            // for (auto &object: mGameObjects)
+            //{
+            //
+            //}
+
             // Clear window
             mWindow->clear();
 
-            // 6. Render background
+            // 7. Render background
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
                 if (g) g->RenderBackground(&context);
             }
 
-            // 7. Render foreground
+            // 8. Render foreground
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
@@ -171,6 +215,7 @@ namespace CMPUT350 {
             }
 
             // Actually render to window
+            context.currentFrame++;
             mWindow->display();
         }
     }

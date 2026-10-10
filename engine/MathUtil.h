@@ -231,12 +231,12 @@ struct Point2D {
     }
 };
 
-static std::ostream &operator<<(std::ostream &os, const Point2D &p) {
+static std::ostream &operator<<(std::ostream &os, const Point2D &p) {   //--------------------------------------------------
     // TODO: write this code
     return os;
 }
 
-static Point2D operator*(float number, const Point2D &rhs) {
+static Point2D operator*(float number, const Point2D &rhs) {    //-------------------------------------------------------------
     // TODO: write this code
     return rhs;
 }
@@ -343,6 +343,8 @@ struct Circle {
 
     Circle(float x, float y, float r) : center(x, y), radius(r) {}
 };
+
+static std::ostream &operator<<(std::ostream &os, const Circle &c); //--------------------------------------------------------------
 
 struct Rect {
     Point2D topLeft;
