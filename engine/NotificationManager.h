@@ -11,9 +11,6 @@ class GameObject;
 
 class NotificationManager {
 public:
-    NotificationManager();  //Maybe not needed
-    ~NotificationManager(); //Maybe not needed
-
     void Register(std::weak_ptr<GameObject> object, const std::string& key);
     void Unregister(std::weak_ptr<GameObject> object, const std::string& key);
     void Notify(const std::string& message);

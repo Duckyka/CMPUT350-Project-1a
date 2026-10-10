@@ -45,7 +45,6 @@ private:
     std::shared_ptr<DrawContext> mDrawContext;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingGameObjects;
-    std::unordered_map<std::string, std::vector<std::weak_ptr<GameObject>>> mListeners;
 };
 
 }  // namespace CMPUT350
