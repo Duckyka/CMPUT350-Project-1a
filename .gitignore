@@ -47,6 +47,9 @@ dkms.conf
 *.o
 *.obj
 
+# cache files
+.cache/
+
 # Precompiled Headers
 *.gch
 *.pch
