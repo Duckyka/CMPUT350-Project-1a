@@ -16,7 +16,8 @@ public:
     void Initialize(CMPUT350::GameContext* context) override;
     void Update(CMPUT350::GameContext* context) override;
     void LateUpdate(CMPUT350::GameContext* context) override;
-    bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
+    // bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
+    void ReceiveNotification(const std::string &message) override;
     bool IsAlive() const override;
     void Kill() override;
 
@@ -42,6 +43,9 @@ private:
     static constexpr float kPlayerHeight = 40.0f;
 
     std::array<std::weak_ptr<Bullet>, kMaxBullets> mBullets;
+
+    bool mMovingLeft = false;
+    bool mMovingRight = false;
 
 };
 
