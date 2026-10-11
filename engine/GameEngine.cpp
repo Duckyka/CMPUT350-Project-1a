@@ -43,13 +43,12 @@ namespace CMPUT350 {
 
     void GameEngine::InstallKeyDownNotification(int keyCode, const std::string &notification)
     {
-        std::cout << "KeyCode, String: " << keyCode << ", " << notification << "\n";
-
+        ;
     }
 
     void GameEngine::InstallKeyUpNotification(int keyCode, const std::string &notification)
     {
-
+        std::cout << "RELEASED KeyCode, String: " << keyCode << ", " << notification << "\n";
     }
 
     GameEngine::const_iterator GameEngine::cbegin() const
@@ -147,6 +146,30 @@ namespace CMPUT350 {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Right))
                     {
                         InstallKeyDownNotification(Key::Right, Right);
+                    }
+
+
+                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Space)
+                    {
+                        InstallKeyUpNotification(Key::Space, Shoot);
+                    }
+
+                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::A)
+                    {
+                        InstallKeyUpNotification(Key::A, Left);
+                    }
+                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Left)
+                    {
+                        InstallKeyUpNotification(Key::Left, Left);
+                    }
+
+                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::D)
+                    {
+                        InstallKeyUpNotification(Key::D, Right);
+                    }
+                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Right)
+                    {
+                        InstallKeyUpNotification(Key::Right, Right);
                     }
                 }
             }

@@ -171,4 +171,10 @@ int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 //Returns the window height
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
+void DrawContext::SetContextOffset(Point2D p)
+{
+    std::cout << "TEST SETCONTEXTOFFSET FUNCTION CALL\n";
+    return;
+}
+
 }  // namespace CMPUT350

@@ -17,6 +17,7 @@ public:
     bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
     bool IsAlive() const override;
     void Kill() override;
+    //void ReceiveNotification(const std::string& key) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;

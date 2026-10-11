@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include <string>
 
 namespace CMPUT350 {
 
@@ -8,7 +9,10 @@ void GameObject::Initialize(GameContext *context) {
 void GameObject::Update(GameContext *context) { return; }
 void GameObject::LateUpdate(GameContext *context) { return; }
 void GameObject::RenderUI(GameContext *contextrender) { return; }
-bool GameObject::HandleKeyEvent(GameContext *context, char key) { return false; }
+//---------------------------------------
+bool GameObject::HandleKeyEvent(GameContext *context, char key) { return false; }   // REMOVE THIS FUNCTION
+//---------------------------------------
 bool GameObject::IsAlive() const { return true; }
 void GameObject::Kill() {}
+void GameObject::ReceiveNotification(const std::string& key) { return; }
 }  // namespace CMPUT350
