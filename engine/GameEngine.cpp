@@ -27,6 +27,8 @@ namespace CMPUT350 {
         }
 
         mDrawContext = std::make_shared<DrawContext>(mWindow, mFont);
+        mGUIContext = std::make_shared<DrawContext>(mWindow, mFont);
+        mWindow->setKeyRepeatEnabled(false);
     }
 
     //Destructor for GameEngine
@@ -43,12 +45,14 @@ namespace CMPUT350 {
 
     void GameEngine::InstallKeyDownNotification(int keyCode, const std::string &notification)
     {
-        ;
+        std::cout << "KeyCode, String: " << keyCode << ", " << notification << "\n";
+        mKeyDownNotifications[keyCode].push_back(notification);
+
     }
 
     void GameEngine::InstallKeyUpNotification(int keyCode, const std::string &notification)
     {
-        std::cout << "RELEASED KeyCode, String: " << keyCode << ", " << notification << "\n";
+        mKeyUpNotifications[keyCode].push_back(notification);
     }
 
     GameEngine::const_iterator GameEngine::cbegin() const
@@ -84,6 +88,7 @@ namespace CMPUT350 {
         NotificationManager notificationManager;
         context.mEngineView = this;
         context.ScreenContext = mDrawContext.get();
+        context.GUIContext = mGUIContext.get();
         context.mNotificationManager = &notificationManager;
         context.currentFrame = 0;       //Frame 0 or 1 to start??
 
@@ -109,74 +114,74 @@ namespace CMPUT350 {
             std::vector<std::shared_ptr<GameObject>> toAdd;
             toAdd.swap(mPendingGameObjects); 
             for (auto& obj : toAdd) {
+                context.CurrObject = obj;
                 obj->Initialize(&context);
                 mGameObjects.push_back(obj);
             }
 
             // 2. Process events
-            while (const std::optional event = mWindow->pollEvent())
-            {
-                if (event->is<sf::Event::Closed>())
-                {
-                   mWindow->close();
+            auto sendNotification = [&](const std::unordered_map<int, std::vector<std::string>> &table, int keyCode) {
+                        auto it = table.find(keyCode);
+                        if (it == table.end()) {
+                            return;
+                        }
+                        for (const auto &message : it->second) {
+                            notificationManager.Notify(message);
+                        }
+            };
+
+            while (const std::optional event = mWindow->pollEvent()) {
+                if (event->is<sf::Event::Closed>()) {
+                    mWindow->close();
                 }
-                else
-                {
-                    std::string Shoot = "Shoot";
-                    std::string Left = "MoveLeft";
-                    std::string Right = "MoveRight";
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
-                    {
-                        InstallKeyDownNotification(Key::Space, Shoot);
-                    }
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))
-                    {
-                        InstallKeyDownNotification(Key::A, Left);
-                    }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Left))
-                    {
-                        InstallKeyDownNotification(Key::Left, Left);
-                    }
-
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D))
-                    {
-                        InstallKeyDownNotification(Key::D, Right);
-                    }
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Right))
-                    {
-                        InstallKeyDownNotification(Key::Right, Right);
-                    }
-
-
-                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Space)
-                    {
-                        InstallKeyUpNotification(Key::Space, Shoot);
-                    }
-
-                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::A)
-                    {
-                        InstallKeyUpNotification(Key::A, Left);
-                    }
-                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Left)
-                    {
-                        InstallKeyUpNotification(Key::Left, Left);
-                    }
-
-                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::D)
-                    {
-                        InstallKeyUpNotification(Key::D, Right);
-                    }
-                    if (event->is<sf::Event::KeyReleased>() && event->getIf<sf::Event::KeyReleased>()->scancode == sf::Keyboard::Scancode::Right)
-                    {
-                        InstallKeyUpNotification(Key::Right, Right);
-                    }
+                else if (const auto *key = event->getIf<sf::Event::KeyPressed>()) {
+                    sendNotification(mKeyDownNotifications, static_cast<int>(key->scancode));
+                }
+                else if (const auto *key = event->getIf<sf::Event::KeyReleased>()) {
+                    sendNotification(mKeyUpNotifications, static_cast<int>(key->scancode));
                 }
             }
+            
+            // while (const std::optional event = mWindow->pollEvent())
+            // {
+            //     if (event->is<sf::Event::Closed>())
+            //     {
+            //        mWindow->close();
+            //     }
+            //     else
+            //     {
+                    // std::string Shoot = "Shoot";
+                    // std::string Left = "MoveLeft";
+                    // std::string Right = "MoveRight";
+                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
+                    // {
+                    //     InstallKeyDownNotification(Key::Space, Shoot);
+                    // }
+
+                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))
+                    // {
+                    //     InstallKeyDownNotification(Key::A, Left);
+                    // }
+                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Left))
+                    // {
+                    //     InstallKeyDownNotification(Key::Left, Left);
+                    // }
+
+                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D))
+                    // {
+                    //     InstallKeyDownNotification(Key::D, Right);
+                    // }
+                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Right))
+                    // {
+                    //     InstallKeyDownNotification(Key::Right, Right);
+                    // }
+            //     }
+            // }
 
             // 3. Update game objects
             for (auto object: mGameObjects)
             {
+                context.CurrObject = object;
                 object->Update(&context);
             }
 
@@ -211,6 +216,7 @@ namespace CMPUT350 {
             // 5. Late updates
             for (auto &object: mGameObjects)
             {
+                context.CurrObject = object;
                 object->LateUpdate(&context);
             }
 
@@ -227,7 +233,10 @@ namespace CMPUT350 {
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
-                if (g) g->RenderBackground(&context);
+                if (g) {
+                    context.CurrObject = obj;
+                    g->RenderBackground(&context);
+                }
             }
 
             // 8. Render foreground
@@ -235,6 +244,12 @@ namespace CMPUT350 {
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
                 if (g) g->RenderForeground(&context);
+            }
+
+            // 9. Render UI on top of everything
+            for (auto &obj : mGameObjects) {
+                context.CurrObject = obj;
+                obj->RenderUI(&context);
             }
 
             // Actually render to window

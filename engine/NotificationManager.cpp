@@ -11,11 +11,9 @@ namespace CMPUT350 {
 
     void NotificationManager::Register(std::weak_ptr<GameObject> object, const std::string& key)
     {
-        if (!object.expired())
+        if (object.expired())
         {
             return; // nothing to register
-            // auto temp = object.lock();
-            // mListeners[key].push_back(temp);
         }
 
         auto& list = mListeners[key];
