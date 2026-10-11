@@ -25,6 +25,27 @@ Left empty because the constructor already sets up all of the Player's state
 */
 void Player::Initialize(CMPUT350::GameContext* context)
 {
+    for (const std::string message : {"MoveLeftDown", "MoveLeftUp", "MoveRightDown", "MoveRightUp", "Shoot"}) {
+        context->mNotificationManager->Register(context->CurrObject, message);
+    }
+}
+
+void Player::ReceiveNotification(const std::string &message) {
+    if (message == "MoveLeftDown") {
+        mMovingLeft = true;
+    }
+    else if (message == "MoveLeftUp") {
+        mMovingLeft = false;
+    }
+    else if (message == "MoveRightDown") {
+        mMovingRight = true;
+    }
+    else if (message == "MoveRightUp") {
+        mMovingRight = false;
+    }
+    else if (message == "Shoot") {
+        mFireRequested = true;
+    }
 }
 
 /*
@@ -36,6 +57,17 @@ Output: none. Counts down the fire cooldown and, if the player asked
 */
 void Player::Update(CMPUT350::GameContext* context)
 {
+    float dx = 0;
+    if (mMovingLeft && mBounds.topLeft.x > 0) {
+        dx -= 10;
+    }
+    if (mMovingRight && mBounds.topLeft.x < context->ScreenContext->GetWindowWidth() - kPlayerWidth) {
+        dx += 10;
+    }
+    mBounds.topLeft.x += dx;
+    shipWingBounds.topLeft.x += dx;
+    ShipFrontBounds.topLeft.x += dx;
+
     if (mCooldown > 0) {
         mCooldown--;
     }
@@ -79,6 +111,7 @@ Output: true if the Player used the key, false otherwise
         'a' moves left and 'd' moves right (10 pixels, kept on screen)
         ' ' only sets mFireRequested, the bullet is created in Update.
 */
+/*
 bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
 {
     if (key == 'a')
@@ -115,6 +148,7 @@ bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
     }
     
 }
+*/
 
 /*
 Draw anything that must appear behind other objects.
