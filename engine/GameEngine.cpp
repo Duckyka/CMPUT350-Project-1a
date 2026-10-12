@@ -91,6 +91,7 @@ namespace CMPUT350 {
         context.GUIContext = mGUIContext.get();
         context.mNotificationManager = &notificationManager;
         context.currentFrame = 0;       //Frame 0 or 1 to start??
+        
 
         while (mWindow->isOpen())  // window is open
         {

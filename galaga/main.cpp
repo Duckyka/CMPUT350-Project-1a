@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Stars.h"
 #include "Keyboard.h"
+#include "Galaga.h"
 
 const int numRows = 5;
 const int numCols = 8;
