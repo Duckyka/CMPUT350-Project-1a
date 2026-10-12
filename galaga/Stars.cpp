@@ -32,3 +32,20 @@ void Stars::RenderBackground(CMPUT350::GameContext* context)
             star.y -= mBounds.height;
     }
 }
+
+/*
+Output: (0, 0). Stars draw directly in screen space, so the engine
+        should not shift them.
+*/
+CMPUT350::Point2D Stars::GetLocation() const
+{
+    return CMPUT350::Point2D(0, 0);
+}
+
+/*
+Output: 0. The star field never rotates.
+*/
+float Stars::GetRotation() const
+{
+    return 0.0f;
+}

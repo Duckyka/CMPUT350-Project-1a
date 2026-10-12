@@ -9,6 +9,10 @@ class Stars : public CMPUT350::GraphicsObject
 public:
     Stars(int numStars, CMPUT350::Rect bounds);
     void RenderBackground(CMPUT350::GameContext* context) override;
+    
+    // Temp: Required for graphicobjects
+    CMPUT350::Point2D GetLocation() const override;
+    float GetRotation() const override;
 
 private:
     std::vector<CMPUT350::Point2D> mStarPositions;

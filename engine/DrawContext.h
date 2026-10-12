@@ -52,6 +52,8 @@ private:
 	Point2D ReverseTransform(Point2D p);
 	Rect Transform(Rect r); // Rotates rectangle and computes new bounding box after rotation
 
+    Point2D mOffset{0, 0};
+    float mRotation = 0;
 };
 
 }  // namespace CMPUT350

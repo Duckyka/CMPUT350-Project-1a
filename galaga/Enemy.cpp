@@ -11,12 +11,8 @@ Initialize the Enemy's bounding box
 */
 Enemy::Enemy(CMPUT350::Point2D loc)
 {
-    // loc is the center, find top left corner
-    CMPUT350::Point2D topLeft(
-        loc.x - kEnemyWidth / 2.0f,
-        loc.y - kEnemyHeight / 2.0f
-    );
-    mBounds = CMPUT350::Rect(topLeft, kEnemyWidth, kEnemyHeight);
+    mLocation = loc;
+    mBounds = CMPUT350::Rect(-kEnemyWidth / 2.0f, -kEnemyHeight / 2.0f, kEnemyWidth, kEnemyHeight);
 }
 
 void Enemy::Initialize(CMPUT350::GameContext* context)
@@ -31,10 +27,7 @@ void Enemy::LateUpdate(CMPUT350::GameContext* context)
 {
 }
 
-bool Enemy::HandleKeyEvent(CMPUT350::GameContext* context, char key)
-{
-    return false;
-}
+
 
 void Enemy::RenderBackground(CMPUT350::GameContext* context)
 {
@@ -47,20 +40,32 @@ void Enemy::RenderForeground(CMPUT350::GameContext* context)
 {
     context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::red);
 }
+
+CMPUT350::Point2D Enemy::GetLocation() const {
+    return mLocation;
+}
+
+float Enemy::GetRotation() const
+{
+    return 0.0f;
+}
+
 /*
 If the bullet collides with the Enemy's bounding box, then delete the Enemy from
 the game.
+Only react to player bullets
 */
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
-    if (std::dynamic_pointer_cast<Bullet>(obj)) {
+    auto bullet = std::dynamic_pointer_cast<Bullet>(obj);
+    if (bullet && bullet->IsPlayerBullet()) {
         Kill();
     }
 }
 
 /*
 Mark the Enemy as dead
-Output: none. The engine removes the Player at the start of the next frame.
+Output: none. The engine removes the Enemy at the start of the next frame.
 */
 void Enemy::Kill()
 {
@@ -82,5 +87,6 @@ Output: the Enemy's main bounding box (the body). The engine uses it
 */
 const CMPUT350::Rect& Enemy::GetBounds()
 {
-    return mBounds;
+    mWorldBounds = mBounds + mLocation;
+    return mWorldBounds;
 }

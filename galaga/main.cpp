@@ -97,12 +97,22 @@ public:
         return mNumCollisions < 10;
     }
 
+    CMPUT350::Point2D GetLocation() const override
+    {
+        return mLoc;
+    }
+
+    float GetRotation() const override
+    {
+        return 0.0f;
+    }
+
     void RenderForeground(CMPUT350::GameContext* context) override
     {
-        context->ScreenContext->DrawCircle(mLoc, mRadius, CMPUT350::Colors::red);
-        context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, mLoc,
-                                                 CMPUT350::Colors::white);
-        context->ScreenContext->DrawLine(mLoc, mLoc + mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
+    context->ScreenContext->DrawCircle({0, 0}, mRadius, CMPUT350::Colors::red);
+    context->ScreenContext->DrawCenteredText("Circle" + std::to_string(mNumCollisions), mRadius / 6.0f, {0, 0},
+                                             CMPUT350::Colors::white);
+    context->ScreenContext->DrawLine({0, 0}, mCollisionPoint, mRadius * 0.1f, CMPUT350::Colors::blue);
     }
 
 private:

@@ -1,4 +1,5 @@
 #include "DrawContext.h"
+#include <SFML/Graphics/ConvexShape.hpp>
 #include <SFML/System/Vector2.hpp>
 
 namespace CMPUT350 {
@@ -92,11 +93,24 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
 void DrawContext::DrawRect(Rect r, RGBColor c) {
     if (!mWindow) return;
 
-    sf::RectangleShape rectangle({r.width, r.height});
-    rectangle.setPosition(sf::Vector2f(r.topLeft.x, r.topLeft.y));
-    rectangle.setFillColor(ToSFMLColor(c));
+    Point2D corners[4] = {
+        r.topLeft,
+        {r.topLeft.x + r.width, r.topLeft.y},
+        {r.topLeft.x + r.width, r.topLeft.y + r.height},
+        {r.topLeft.x, r.topLeft.y + r.height}
+    };
 
-    mWindow->draw(rectangle);
+    sf::ConvexShape shape(4);
+    for (int i = 0; i < 4; i++) {
+        Point2D p = Transform(corners[i]);
+        shape.setPoint(i, sf::Vector2f(p.x, p.y));
+    }
+
+    // sf::RectangleShape rectangle({r.width, r.height});
+    // rectangle.setPosition(sf::Vector2f(r.topLeft.x, r.topLeft.y));
+    shape.setFillColor(ToSFMLColor(c));
+
+    mWindow->draw(shape);
 }
 
 /**
@@ -171,29 +185,78 @@ int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
 //Returns the window height
 int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
 
+// Remebers where the current object is on the screen
 void DrawContext::SetContextOffset(Point2D p)
 {
-    return;
+    mOffset = p;
 }
 
+// Set the rotation
 void DrawContext::SetContextRotation(float rotation)
 {
-    return;
+    mRotation = rotation;
 }
 
+/*
+Converts a point from the object's own space to screen space
+
+The object draws as if its center is at (0,0). To find where that point goes
+on the screen, we do:
+1. Spin the point around (0,0) by the object's rotation
+2. Slide the point over to where the object actually is
+*/
 Point2D DrawContext::Transform(Point2D p)
 {
-    ;
+    // cos and sin of the angle tell us how much of the old x and old y
+    // end up in the new x and new y after turning
+    float c = std::cos(mRotation);
+    float s = std::sin(mRotation);
+
+    // Rotation formula: turning (x, y) by an angle gives
+    // new x = x*cos - y*sin
+    // new y = x*sin + y*cos
+    return Point2D(p.x * c - p.y * s + mOffset.x,
+                    p.x * s + p.y * c + mOffset.y);
 }
 
+/*
+Converts a point from screen space back to the object's own space
+
+Undos Transform.
+*/
 Point2D DrawContext::ReverseTransform(Point2D p)
 {
-    ;
+    // 1. Undo the slide
+    Point2D local = p - mOffset;
+
+    // 2. Undo the spin by turning the same amount in the opposite direction
+    float c = std::cos(-mRotation);
+    float s = std::sin(-mRotation);
+    return Point2D(local.x * c - local.y * s,
+                    local.x * s + local.y * c);
 }
 
+/*
+Converts a rectangle from the object's own space to screen space
+
+When a rectangle is turned, it's no longer lined up with the screen edges,
+so it can't be stored as a Rect anymore.
+*/
 Rect DrawContext::Transform(Rect r)
 {
-    ;
+    // Find the top-left and bottom-right corners of the original rectangle
+    Point2D tl = r.topLeft;
+    Point2D br(r.topLeft.x + r.width, r.topLeft.y + r.height);
+
+    // Turn and move two opposite corners, then make a box around them
+    Rect result(Transform(tl), Transform(br));
+
+    // Turn and move the other two corners, and grow the box to fit them too.
+    // After a rotation, any of the four corners could end up sticking out
+    // the furthest, so we need all four
+    result |= Transform(Point2D(br.x, tl.y)); // top-right corner
+    result |= Transform(Point2D(tl.x, br.y)); // bottom-left corner
+    return result;
 }
 
 }  // namespace CMPUT350
