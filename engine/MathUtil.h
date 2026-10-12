@@ -137,7 +137,7 @@ struct Point2D {
      *
      * @param scalar Float value to multiply with the current Point2D
      */
-    Point2D &operator*=(const int &scalar) {
+    Point2D &operator*=(const float &scalar) {
         // TODO: write this code
         if (scalar == 0)
         {
@@ -232,7 +232,7 @@ struct Point2D {
 };
 
 static std::ostream &operator<<(std::ostream &os, const Point2D &p) {   //--------------------------------------------------
-    // TODO: write this code
+    os << "(" << p.x << ", " << p.y << ")";
     return os;
 }
 
@@ -297,7 +297,7 @@ struct Line {
         Point2D answer = p1 + (ab * scalar);
         return answer;
     }
-    bool Crosses(Line other, Point2D &crossingPoint) const {
+    bool Crosses(const Line &other, Point2D &crossingPoint) const {
         // Get the direction vectors of the lines
         Point2D vectorA = p2 - p1;
         Point2D vectorB = other.p2 - other.p1;

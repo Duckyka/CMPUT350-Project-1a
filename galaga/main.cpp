@@ -4,10 +4,13 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Stars.h"
+#include "Keyboard.h"
 
 const int numRows = 5;
 const int numCols = 8;
 const float screenWidth = 768.0f;
+
+namespace Key = CMPUT350::Key;
 
 class Ball : public CMPUT350::CollisionObject
 {
@@ -148,6 +151,18 @@ int main()
                 engine.AddGameObject(enemy);
             }
         }
+
+        // Temporary key setup for testing
+        engine.InstallKeyDownNotification(Key::A, "MoveLeftDown");
+        engine.InstallKeyDownNotification(Key::Left, "MoveLeftDown");
+        engine.InstallKeyUpNotification(Key::A, "MoveLeftUp");
+        engine.InstallKeyUpNotification(Key::Left, "MoveLeftUp");
+        engine.InstallKeyDownNotification(Key::D, "MoveRightDown");
+        engine.InstallKeyDownNotification(Key::Right, "MoveRightDown");
+        engine.InstallKeyUpNotification(Key::D, "MoveRightUp");
+        engine.InstallKeyUpNotification(Key::Right, "MoveRightUp");
+        engine.InstallKeyDownNotification(Key::Space, "Shoot");
+
         engine.Run();
     }
     return 0;

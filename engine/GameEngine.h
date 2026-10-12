@@ -45,6 +45,9 @@ private:
     std::shared_ptr<DrawContext> mDrawContext;
     std::vector<std::shared_ptr<GameObject>> mGameObjects;
     std::vector<std::shared_ptr<GameObject>> mPendingGameObjects;
+    std::shared_ptr<DrawContext> mGUIContext;
+    std::unordered_map<int, std::vector<std::string>> mKeyDownNotifications;
+    std::unordered_map<int, std::vector<std::string>> mKeyUpNotifications;
 };
 
 }  // namespace CMPUT350
