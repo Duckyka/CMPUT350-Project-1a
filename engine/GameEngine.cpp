@@ -184,6 +184,15 @@ namespace CMPUT350 {
                 context.CurrObject = object;
                 object->Update(&context);
             }
+            
+            // Activate objects crated during Update
+            std::vector<std::shared_ptr<GameObject>> newObjects;
+            newObjects.swap(mPendingGameObjects);
+            for (auto &obj: newObjects) {
+                context.CurrObject = obj;
+                obj->Initialize(&context);
+                mGameObjects.push_back(obj);
+            }
 
             // 4. Process collision events
             std::vector<std::shared_ptr<CollisionObject>> collidables;
@@ -235,6 +244,8 @@ namespace CMPUT350 {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
                 if (g) {
                     context.CurrObject = obj;
+                    mDrawContext->SetContextOffset(g->GetLocation());
+                    mDrawContext->SetContextRotation(g->GetRotation());
                     g->RenderBackground(&context);
                 }
             }
@@ -243,7 +254,13 @@ namespace CMPUT350 {
             for (auto &obj : mGameObjects)
             {
                 auto g = std::dynamic_pointer_cast<GraphicsObject>(obj);
-                if (g) g->RenderForeground(&context);
+                if (g) {
+                    context.CurrObject = obj;
+                    mDrawContext->SetContextOffset(g->GetLocation());
+                    mDrawContext->SetContextRotation(g->GetRotation());
+                    g->RenderForeground(&context);
+                
+                }
             }
 
             // 9. Render UI on top of everything

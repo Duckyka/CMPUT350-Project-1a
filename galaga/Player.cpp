@@ -9,14 +9,16 @@ Output: none. Sets mBounds (body), shipWingBounds, and ShipFrontBounds (nose)
 */
 Player::Player(CMPUT350::Point2D loc)
 {
+    mLocation = loc;
     // loc is the center, find top left corner
-    CMPUT350::Point2D topLeft(
-        loc.x - kPlayerWidth / 2.0f,
-        loc.y - kPlayerHeight / 2.0f
-    );
-    mBounds = CMPUT350::Rect(topLeft, kPlayerWidth, kPlayerHeight);
-    shipWingBounds = CMPUT350::Rect({topLeft.x - 15, topLeft.y + 25}, kPlayerWidth + 30, kPlayerHeight - 28);
-    ShipFrontBounds = CMPUT350::Rect({topLeft.x + 14, topLeft.y - 15}, kPlayerWidth - 28, kPlayerHeight + 18);
+    
+    // Top-left corner of the body
+    float left = -kPlayerWidth / 2.0f;
+    float top = -kPlayerHeight / 2.0f;
+    
+    mBounds = CMPUT350::Rect(left, top, kPlayerWidth, kPlayerHeight);
+    shipWingBounds = CMPUT350::Rect(left - 15, top + 25, kPlayerWidth + 30, kPlayerHeight - 28);
+    ShipFrontBounds = CMPUT350::Rect(left + 14, top - 15, kPlayerWidth - 28, kPlayerHeight + 18);
 }
 
 /*
@@ -57,16 +59,13 @@ Output: none. Counts down the fire cooldown and, if the player asked
 */
 void Player::Update(CMPUT350::GameContext* context)
 {
-    float dx = 0;
-    if (mMovingLeft && mBounds.topLeft.x > 0) {
-        dx -= 10;
+    float screenWidth = context->ScreenContext->GetWindowWidth();
+    if (mMovingLeft && mLocation.x - kWingHalfWidth - kMoveSpeed >= 0) {
+        mLocation.x -= kMoveSpeed;
     }
-    if (mMovingRight && mBounds.topLeft.x < context->ScreenContext->GetWindowWidth() - kPlayerWidth) {
-        dx += 10;
+    if (mMovingRight && mLocation.x + kWingHalfWidth + kMoveSpeed <= screenWidth) {
+        mLocation.x += kMoveSpeed;
     }
-    mBounds.topLeft.x += dx;
-    shipWingBounds.topLeft.x += dx;
-    ShipFrontBounds.topLeft.x += dx;
 
     if (mCooldown > 0) {
         mCooldown--;
@@ -75,11 +74,11 @@ void Player::Update(CMPUT350::GameContext* context)
     // Fire here so the bullet uses the ship's position afte this frame's movement
     if (mFireRequested && mCooldown == 0) {
         for (auto& slot : mBullets) {
+            
             if (slot.expired()) {
+                // Just above the tip of the nose
                 CMPUT350::Point2D firePosition(
-                    mBounds.topLeft.x + mBounds.width / 2.0f,
-                    ShipFrontBounds.topLeft.y - 5.0f
-                );
+                    mLocation.x, mLocation.y + ShipFrontBounds.topLeft.y - 5.0f);
                 CMPUT350::Point2D direction(0.0f, -1.0f);
 
                 auto bullet = std::make_shared<Bullet>(firePosition, direction, true);
@@ -172,6 +171,21 @@ void Player::RenderForeground(CMPUT350::GameContext* context)
 }
 
 /*
+The center of the ship in screen space. The ship rotates around this point
+*/
+CMPUT350::Point2D Player::GetLocation() const 
+{
+    return mLocation;
+}
+/*
+Get the ship's rotation in radians
+*/
+float Player::GetRotation() const
+{
+    return mRotation;
+}
+
+/*
 Called by the engine when the Player's bounding box overlaps another object.
 TODO in project 1b
 */
@@ -203,6 +217,8 @@ Output: the Player's main bounding box (the body). The engine uses it
 */
 const CMPUT350::Rect& Player::GetBounds()
 {
-    // TODO: Update code
-    return mBounds;
+    mWorldBounds = mBounds + mLocation;
+    return mWorldBounds;
 }
+
+

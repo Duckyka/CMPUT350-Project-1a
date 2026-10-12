@@ -70,10 +70,10 @@ void Bullet::LateUpdate(CMPUT350::GameContext* context)
 /*
 Always return false since bullet's dont have keyboard commands.
 */
-bool Bullet::HandleKeyEvent(CMPUT350::GameContext* context, char key)
-{
-    return false;
-}
+// bool Bullet::HandleKeyEvent(CMPUT350::GameContext* context, char key)
+// {
+//     return false;
+// }
 
 void Bullet::RenderBackground(CMPUT350::GameContext* context)
 {
@@ -86,7 +86,23 @@ void Bullet::RenderForeground(CMPUT350::GameContext* context)
 {
     CMPUT350::RGBColor color = mIsPlayer ? CMPUT350::Colors::cyan
                                          : CMPUT350::Colors::red;
-    context->ScreenContext->DrawRect(mBounds, color);
+    context->ScreenContext->DrawRect(CMPUT350::Rect(-kSize / 2.0f, -kSize / 2.0f, kSize, kSize), color);
+}
+
+/*
+Output: the center of the bullet in screen space.
+*/
+CMPUT350::Point2D Bullet::GetLocation() const
+{
+    return mLocation;
+}
+
+/*
+Output: the bullet's rotation in radians. Bullets don't rotate, so always 0.
+*/
+float Bullet::GetRotation() const
+{
+    return 0.0f;
 }
 
 /*
