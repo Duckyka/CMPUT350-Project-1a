@@ -3,19 +3,21 @@
 
 namespace CMPUT350 {
 
-class Galaga
-{
-public:
-    enum States{Insert, Startup, Waves, Play, End};
+    class Galaga
+    {
+    public:
+        enum States{Insert, Startup, Waves, Play, End};
 
-    void Initialize(States currentState);
+        void Initialize(States currentState);
+        void setUpNotifications();
 
-    States CheckState(States currentState);
-    //setUpNotifications(
-private:
-    bool nextState;
-    States currentState;
-};
+        States CheckState(States currentState, bool nextState);
+
+        using gStates = CMPUT350::Galaga::States;
+    private:
+        bool nextState;
+        States currentState;
+    };
 
 } //Namespace CMUT350
 

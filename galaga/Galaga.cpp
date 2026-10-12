@@ -6,13 +6,20 @@
 enum States{Insert, Startup, Waves, Play, End};
 
 //Initialize function, sets up Galaga object, starting with Insert state. 
-void Initialize(States currentState)
+void CMPUT350::Galaga::Initialize(States currentState)
 {
     currentState = States::Insert;
+    setUpNotifications();
+}
+
+//Register initial notification types
+void CMPUT350::Galaga::setUpNotifications()
+{
+    ;
 }
 
 //CheckState function, transitions between states. 
-States CheckState(States currentState, bool nextState)
+CMPUT350::Galaga::States CMPUT350::Galaga::CheckState(States currentState, bool nextState)
 {
     if(currentState == States::Insert && nextState)
     {
