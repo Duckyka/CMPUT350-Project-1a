@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include "Stars.h"
 #include "Keyboard.h"
+#include "Galaga.h"
 
 const int numRows = 5;
 const int numCols = 8;
@@ -143,35 +144,38 @@ int main()
     else
     {
         CMPUT350::GameEngine engine(768, 1024, "Galaga");
-        auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
-        engine.AddGameObject(player);
+        //auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
+        //engine.AddGameObject(player);
         engine.AddGameObject(std::make_shared<Stars>(250, CMPUT350::Rect(0, 0, 768, 1024)));
-        
+
+        auto galaga = std::make_shared<Galaga>(768, 1024);
+        engine.AddGameObject(galaga);
+
         // Add the 40 enemies
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                // Each column gets 96 pixels wide of a slot
-                float slotWidth = screenWidth / numCols;
-                float x = slotWidth / 2 + col * slotWidth;
+        // for (int row = 0; row < numRows; row++) {
+        //     for (int col = 0; col < numCols; col++) {
+        //         // Each column gets 96 pixels wide of a slot
+        //         float slotWidth = screenWidth / numCols;
+        //         float x = slotWidth / 2 + col * slotWidth;
 
-                // Rows start near the top and are 60 pixels apart
-                float y = 80 + row * 60;
+        //         // Rows start near the top and are 60 pixels apart
+        //         float y = 80 + row * 60;
 
-                auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(x,y));
-                engine.AddGameObject(enemy);
-            }
-        }
+        //         auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(x,y));
+        //         engine.AddGameObject(enemy);
+        //     }
+        // }
 
         // Temporary key setup for testing
-        engine.InstallKeyDownNotification(Key::A, "MoveLeftDown");
-        engine.InstallKeyDownNotification(Key::Left, "MoveLeftDown");
-        engine.InstallKeyUpNotification(Key::A, "MoveLeftUp");
-        engine.InstallKeyUpNotification(Key::Left, "MoveLeftUp");
-        engine.InstallKeyDownNotification(Key::D, "MoveRightDown");
-        engine.InstallKeyDownNotification(Key::Right, "MoveRightDown");
-        engine.InstallKeyUpNotification(Key::D, "MoveRightUp");
-        engine.InstallKeyUpNotification(Key::Right, "MoveRightUp");
-        engine.InstallKeyDownNotification(Key::Space, "Shoot");
+        // engine.InstallKeyDownNotification(Key::A, "MoveLeftDown");
+        // engine.InstallKeyDownNotification(Key::Left, "MoveLeftDown");
+        // engine.InstallKeyUpNotification(Key::A, "MoveLeftUp");
+        // engine.InstallKeyUpNotification(Key::Left, "MoveLeftUp");
+        // engine.InstallKeyDownNotification(Key::D, "MoveRightDown");
+        // engine.InstallKeyDownNotification(Key::Right, "MoveRightDown");
+        // engine.InstallKeyUpNotification(Key::D, "MoveRightUp");
+        // engine.InstallKeyUpNotification(Key::Right, "MoveRightUp");
+        // engine.InstallKeyDownNotification(Key::Space, "Shoot");
 
         engine.Run();
     }

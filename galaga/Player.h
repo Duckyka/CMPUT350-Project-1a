@@ -8,7 +8,7 @@
 
 class Bullet;
 
-class Player : public CMPUT350::CollisionObject
+class Player : public CMPUT350::CollisionObject, public std::enable_shared_from_this<Player>
 {
 public:
     Player(CMPUT350::Point2D loc);
@@ -34,6 +34,8 @@ public:
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
 
+    void SetPaused(bool paused);
+
 private:
     // Ship shape in local space, centered on (0, 0)
     CMPUT350::Rect mBounds;
@@ -50,6 +52,8 @@ private:
     int mCooldown = 0;
     bool mMovingLeft = false;
     bool mMovingRight = false;
+    bool mIsPaused = false;
+
 
     static constexpr int kFireDelay = 8;
     static constexpr int kMaxBullets = 2;
