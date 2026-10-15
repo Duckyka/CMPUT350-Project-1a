@@ -28,6 +28,8 @@ public:
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
 
+    void StartAttackRun();
+
 private:
     CMPUT350::Rect mBounds;
     CMPUT350::Rect mWorldBounds;

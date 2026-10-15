@@ -92,6 +92,14 @@ namespace CMPUT350 {
         context.mNotificationManager = &notificationManager;
         context.currentFrame = 0;       //Frame 0 or 1 to start??
         
+        // for (auto &obj : mGameObjects)
+        // {
+        //     auto g = std::dynamic_pointer_cast<Galaga>(obj);
+        //     if (g)
+        //     {
+        //         obj
+        //     }
+        // }
 
         while (mWindow->isOpen())  // window is open
         {

@@ -90,3 +90,8 @@ const CMPUT350::Rect& Enemy::GetBounds()
     mWorldBounds = mBounds + mLocation;
     return mWorldBounds;
 }
+
+void Enemy::StartAttackRun()
+{
+    
+}

@@ -221,4 +221,9 @@ const CMPUT350::Rect& Player::GetBounds()
     return mWorldBounds;
 }
 
+void Player::SetPaused(bool paused)
+{
+    mIsPaused = paused;
+}
+
 
