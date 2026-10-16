@@ -28,9 +28,10 @@ public:
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
 
+    virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
     void StartAttackRun();
 
-private:
+protected:
     CMPUT350::Rect mBounds;
     CMPUT350::Rect mWorldBounds;
     CMPUT350::Point2D mLocation;

@@ -1,7 +1,11 @@
 #include "Galaga.h"
+#include "Bee.h"
+#include "Butterfly.h"
+#include "Boss.h"
 #include <Keyboard.h>
 #include <GameObject.h>
 #include <DrawContext.h>
+#include <string>
 
     // struct Line
     // {
@@ -68,7 +72,9 @@ void Galaga::ReceiveNotification(const std::string& message)
     if (mCurrentState == GameState::WaitingForCoins)
     {
         if (message == "CoinInserted")
-        { mCredits++; }
+        { 
+            mCredits++; 
+        }
         else if (message == "StartPressed" && mCredits > 0)
         {
             mCredits--;
@@ -152,7 +158,14 @@ void Galaga::UpdateWaves(GameContext* context)
         {
             mSpawnTimer = 0.0f;
             //std::vector<CMPUT350::Line> path = GenerateBezierPath(mCurrentWaveIndex);
-            auto enemy = std::make_shared<Enemy>(CMPUT350::Point2D(mScreenWidth/2, mScreenHeight/2));
+            CMPUT350::Point2D spawnLocation(mScreenWidth/2.0f, mScreenHeight/2.0f);
+            std::shared_ptr<Enemy> enemy;
+            switch (mShipsSpawnedInWave % 3)
+            {
+                case 0:  enemy = std::make_shared<Bee>(spawnLocation); break;
+                case 1:  enemy = std::make_shared<Butterfly>(spawnLocation); break;
+                default: enemy = std::make_shared<Boss>(spawnLocation); break;
+            }
 
             context->mEngineView->AddGameObject(enemy);
             mEnemies.push_back(enemy);
@@ -234,6 +247,13 @@ void Galaga::RenderUI(GameContext* context)
 {
     if (mCurrentState == GameState::WaitingForCoins)
     {
-        context->ScreenContext->DrawText("INSERT COIN", 25, CMPUT350::Point2D(mScreenWidth / 3, mScreenHeight / 2), CMPUT350::Colors::white);
+        // The engine clears the window every frame, so only draw the text that matches the current credits
+        const char* text = (mCredits > 0) ? "START GAME" : "INSERT COIN";
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::white);
+    }
+
+    else if (mCurrentState == GameState::Startup) {
+        std::string text = "LEVEL " + std::to_string(mCurrentLevel);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::green);
     }
 }
