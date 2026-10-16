@@ -152,7 +152,9 @@ void Galaga::UpdateWaves(GameContext* context)
     float deltaTime = 1.0f / 30.0f;
     mSpawnTimer += deltaTime;
 
-    if (mCurrentWaveIndex < 5)
+    // TESTING: only 1 wave so attacks start sooner. Set back to 5 for the full game.
+    constexpr int kNumWaves = 1;
+    if (mCurrentWaveIndex < kNumWaves)
     {
         if (mShipsSpawnedInWave < 8 && mSpawnTimer >= 0.4f)
         {
@@ -215,8 +217,13 @@ void Galaga::LaunchAttackingEnemy(GameContext* context)
     {
         if (auto enemy = std::dynamic_pointer_cast<Enemy>(*iterator))
         {
-            enemy->StartAttackRun();
-            break;
+            // test target: bottom-right corner of the screen
+            CMPUT350::Point2D target(mScreenWidth - 60.0f, mScreenHeight - 60.0f);
+            if (enemy->Attack(context, target)) {
+                break;
+            }
+            // enemy->StartAttackRun();
+            // break;
         }
     }
 }
