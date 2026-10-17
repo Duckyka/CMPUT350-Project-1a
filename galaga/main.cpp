@@ -4,7 +4,7 @@
 #include "CollisionObject.h"
 #include "Galaga.h"
 
-// Set to true to run the collision test scene instead of the game
+// Set to true to run the collision test scene instead of the game.
 const bool gUseCollisionDemo = false;
 
 class Ball : public CMPUT350::CollisionObject
