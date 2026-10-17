@@ -4,7 +4,6 @@
 
 namespace {
     constexpr int kSamplesPerSegment = 100;
-    constexpr float kPathSpeed = 6.0f;
 
     /*
     Sample a chain of cubic bezier segments at t in [0, 1] (from Lab 5)
@@ -70,6 +69,8 @@ void Enemy::Update(CMPUT350::GameContext* context)
 {
     switch (mState) {
         case EnemyState::InFormation:
+            // Sway left and right around the slot
+            mLocation = mFormationLocation + CMPUT350::Point2D(std::sin(context->currentFrame * 0.03f) * 20.0f, 0.0f);
             break;
         case EnemyState::Entering:
         case EnemyState::Attacking:
