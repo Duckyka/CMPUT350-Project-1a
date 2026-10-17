@@ -1,6 +1,7 @@
 #include "Bee.h"
+#include "Enemy.h"
 
-Bee::Bee(CMPUT350::Point2D loc) : Enemy(loc)
+Bee::Bee(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& entryPath) : Enemy(loc, entryPath)
 {
 }
 
@@ -11,7 +12,7 @@ Output: true if the Bee started an attack, false otherwise
 bool Bee::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target)
 {
     // already busy
-    if (mFollowingPath) {
+    if (mState != EnemyState::InFormation) {
         return false;
     }
 
@@ -25,7 +26,7 @@ bool Bee::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target
     CMPUT350::Point2D pull2 = KeepOnScreen(context, end + CMPUT350::Point2D(0.0f, -400.0f));
 
     FollowPath({start, pull1, pull2, end});
-
+    mState = EnemyState::Attacking;
     return true;
 }
 
