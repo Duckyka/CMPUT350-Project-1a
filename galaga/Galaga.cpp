@@ -6,6 +6,7 @@
 #include <GameObject.h>
 #include <DrawContext.h>
 #include <string>
+#include "Bezier.h"
 
     // struct Line
     // {
@@ -129,15 +130,18 @@ void Galaga::UpdateStartup(GameContext* context)
     {
         ResetGame(context);
 
-        auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
-        mPlayer = player;
-        context->mEngineView->AddGameObject(player);
-        std::weak_ptr<GameObject> playerPtr = shared_from_this();
-        context->mNotificationManager->Register(playerPtr, "MoveLeftDown");
-        context->mNotificationManager->Register(playerPtr, "MoveLeftUp");
-        context->mNotificationManager->Register(playerPtr, "MoveRightDown");
-        context->mNotificationManager->Register(playerPtr, "MoveRightUp");
-        context->mNotificationManager->Register(playerPtr, "Shoot");
+        if (mCurrentLevel == 1)
+        {
+            auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
+            mPlayer = player;
+            context->mEngineView->AddGameObject(player);
+            std::weak_ptr<GameObject> playerPtr = shared_from_this();
+            context->mNotificationManager->Register(playerPtr, "MoveLeftDown");
+            context->mNotificationManager->Register(playerPtr, "MoveLeftUp");
+            context->mNotificationManager->Register(playerPtr, "MoveRightDown");
+            context->mNotificationManager->Register(playerPtr, "MoveRightUp");
+            context->mNotificationManager->Register(playerPtr, "Shoot");
+        }
     }
     if (mStateTimer >= 3.0f)
     {
@@ -156,11 +160,12 @@ void Galaga::UpdateWaves(GameContext* context)
     constexpr int kNumWaves = 1;
     if (mCurrentWaveIndex < kNumWaves)
     {
+
         if (mShipsSpawnedInWave < 8 && mSpawnTimer >= 0.4f)
         {
             mSpawnTimer = 0.0f;
-            //std::vector<CMPUT350::Line> path = GenerateBezierPath(mCurrentWaveIndex);
-            CMPUT350::Point2D spawnLocation(mScreenWidth/2.0f, mScreenHeight/2.0f);
+            std::vector<Point2D> path = GenerateBezierPath(mCurrentWaveIndex, mShipsSpawnedInWave);
+            CMPUT350::Point2D spawnLocation({mScreenWidth * 0.5f, mScreenHeight * 0.5f});
             std::shared_ptr<Enemy> enemy;
             switch (mShipsSpawnedInWave % 3)
             {
@@ -239,15 +244,39 @@ void Galaga::ResetGame(GameContext* context)
     }
 }
 
-std::vector<CMPUT350::Line> Galaga::GenerateBezierPath(int waveIndex)
+std::vector<Point2D> Galaga::GenerateBezierPath(int waveIndex, int currShipsInWave)
 {
     float width = static_cast<float>(mScreenWidth);
     float height = static_cast<float>(mScreenHeight);
-    return {
-        { width * 0.0f, height * 0.0f },
-        { width * 0.5f, height * 0.5f },
-        { width * 1.0f, height * 1.0f }
-    };
+
+    float shipWidth = (width - 20) / 10 * currShipsInWave;
+    float shipHeight = 20 * waveIndex;
+
+    if (mCurrentLevel % 5 == 1)
+    {
+        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
+        return Bezier(points).GetCurve();
+    }
+    else if (mCurrentLevel % 5 == 2)
+    {
+        std::vector<Point2D> points = {{ width * 0.0f, height * 0.5f },{ width * 0.65f, height * 0.40f },{ width * 0.30f, height * 0.30f },{ shipWidth, shipHeight }};
+        return Bezier(points).GetCurve();
+    }
+    else if (mCurrentLevel % 5 == 3)
+    {
+        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
+        return Bezier(points).GetCurve();
+    }
+    else if (mCurrentLevel % 5 == 4)
+    {
+        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
+        return Bezier(points).GetCurve();
+    }
+    else
+    {
+        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
+        return Bezier(points).GetCurve();
+    }
 }
 
 void Galaga::RenderUI(GameContext* context)
