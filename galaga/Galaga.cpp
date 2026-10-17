@@ -252,6 +252,7 @@ void Galaga::UpdateGameplay(GameContext* context)
 
 void Galaga::UpdateGameOver(GameContext* context)
 {
+    mCurrentLevel = 1;
     if (mStateTimer >= 5.0f)
     {
         mCurrentLevel = 1;
@@ -338,7 +339,26 @@ void Galaga::RenderUI(GameContext* context)
 
     else if (mCurrentState == GameState::Startup) {
         std::string text = "LEVEL " + std::to_string(mCurrentLevel);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::green);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, mScreenHeight / 2.0f), CMPUT350::Colors::green);
+    }
+
+    else if (mCurrentState == GameState::Waves) {
+        std::string text = "SCORE " + std::to_string(mScore);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, 20), CMPUT350::Colors::green);
+        text = "LIVES " + std::to_string(mLives);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(30, mScreenHeight - 30), CMPUT350::Colors::white);
+    }
+    
+    else if (mCurrentState == GameState::Gameplay) {
+        std::string text = "SCORE " + std::to_string(mScore);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, 20), CMPUT350::Colors::green);
+        text = "LIVES " + std::to_string(mLives);
+        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(30, mScreenHeight - 30), CMPUT350::Colors::white);
+    }
+
+    else if (mCurrentState == GameState::GameOver) {
+        std::string text = "GAME OVER";
+        context->ScreenContext->DrawText(text, 30, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::red);
     }
 }
 
