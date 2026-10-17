@@ -31,12 +31,12 @@ struct Shape {
 // Shape Collisions helpers
 bool Overlaps(const Rect &a, const Rect &b);
 bool LineHitsLine(const Line &l, const Line &o, float &t);
-bool LineHitsCirlce(const Line &l, const Circle &c, float &t);
+bool LineHitsCircle(const Line &l, const Circle &c, float &t);
 bool LineHitsRect(const Line &l, const Rect &r, float &t);
 bool CircleHitsCircle(const Circle &a, const Circle &b);
 bool CircleHitsRect(const Circle &c, const Rect &r);
 Shape ToWorld(const Shape &s, Point2D location, float rotation);
-bool ShapesCollide(const Shape &a, const Shape &b, bool &hasPoint, Point2D &worldPoint);
+bool ShapesCollide(const Shape &a, const Shape &b, bool &hasPoint, Point2D &worldPoint, float &t);
 
 class CollisionObject : public GraphicsObject {
 public:

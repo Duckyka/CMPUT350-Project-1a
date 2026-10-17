@@ -33,6 +33,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     void SetPaused(bool paused);
 
@@ -44,6 +45,8 @@ private:
 
     // Body rect shifted to screen space, returned by GetBounds()
     CMPUT350::Rect mWorldBounds;
+    // Collision shapes in local space, returned by GetShapes()
+    std::vector<CMPUT350::Shape> mShapes;
     CMPUT350::Point2D mLocation;
     float mRotation = 0;
 

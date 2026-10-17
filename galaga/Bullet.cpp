@@ -150,3 +150,13 @@ const CMPUT350::Rect& Bullet::GetBounds()
 {
     return mBounds;
 }
+
+/*
+Output: the bullet's collision shape in local space (a small square
+        centered on (0, 0)). The engine moves it to screen space.
+*/
+const std::vector<CMPUT350::Shape>& Bullet::GetShapes()
+{
+    mShapes = {CMPUT350::Shape(CMPUT350::Rect(-kSize / 2.0f, -kSize / 2.0f, kSize, kSize))};
+    return mShapes;
+}

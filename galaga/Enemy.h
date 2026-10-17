@@ -28,6 +28,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
     void StartAttackRun();
@@ -35,6 +36,8 @@ public:
 protected:
     CMPUT350::Rect mBounds;
     CMPUT350::Rect mWorldBounds;
+    // Collision shapes in local space, returned by GetShapes()
+    std::vector<CMPUT350::Shape> mShapes;
     CMPUT350::Point2D mLocation;
     bool mAlive = true;
     static constexpr float kEnemyWidth = 40.0f;

@@ -1,12 +1,13 @@
 #include "CollisionObject.h"
 #include <cmath>
+#include <algorithm>
 
 namespace CMPUT350 {
 
 /*
 Checks if two axis-aligned rectangles overlap
 */
-bool OverLaps(const Rect &a, const Rect &b) {
+bool Overlaps(const Rect &a, const Rect &b) {
     // If one rect is fully left, right, above, or below the other, they can't overlap
     bool separated = 
             (a.topLeft.x + a.width) < b.topLeft.x ||     // a is left of b

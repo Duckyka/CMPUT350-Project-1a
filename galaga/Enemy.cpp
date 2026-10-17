@@ -250,3 +250,13 @@ void Enemy::FollowPath(const std::vector<CMPUT350::Point2D>& controlPoints)
     mPathDistance = 0.0f;
     mFollowingPath = true;
 }
+
+/*
+Output: the enemy's collision shape in local space (its body rectangle).
+        The engine rotates and moves it to screen space before testing.
+*/
+const std::vector<CMPUT350::Shape>& Enemy::GetShapes()
+{
+    mShapes = {CMPUT350::Shape(mBounds)};
+    return mShapes;
+}

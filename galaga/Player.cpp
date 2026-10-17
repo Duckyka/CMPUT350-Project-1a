@@ -227,3 +227,13 @@ void Player::SetPaused(bool paused)
 }
 
 
+
+/*
+Output: the ship's collision shapes in local space (body, wings, nose).
+        The engine moves them to screen space before testing.
+*/
+const std::vector<CMPUT350::Shape>& Player::GetShapes()
+{
+    mShapes = {CMPUT350::Shape(mBounds), CMPUT350::Shape(shipWingBounds), CMPUT350::Shape(ShipFrontBounds)};
+    return mShapes;
+}
