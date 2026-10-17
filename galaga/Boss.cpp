@@ -1,6 +1,6 @@
 #include "Boss.h"
 
-Boss::Boss(CMPUT350::Point2D loc) : Enemy(loc)
+Boss::Boss(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& entryPath) : Enemy(loc, entryPath)
 {
 }
 

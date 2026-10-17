@@ -5,10 +5,19 @@
 #include "GameContext.h"
 #include <vector>
 
+enum class EnemyState
+{
+    Entering,
+    InFormation,
+    Attacking,
+    Returning
+};
+
 class Enemy : public CMPUT350::CollisionObject
 {
 public:
-    Enemy(CMPUT350::Point2D loc);
+    Enemy(CMPUT350::Point2D formationLoc, const std::vector<CMPUT350::Point2D>& entryPath);
+    bool IsInFormation() const;
 
     // GameObject Functions
     void Initialize(CMPUT350::GameContext* context) override;
@@ -28,6 +37,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
     void StartAttackRun();
@@ -35,6 +45,8 @@ public:
 protected:
     CMPUT350::Rect mBounds;
     CMPUT350::Rect mWorldBounds;
+    // Collision shapes in local space, returned by GetShapes()
+    std::vector<CMPUT350::Shape> mShapes;
     CMPUT350::Point2D mLocation;
     bool mAlive = true;
     static constexpr float kEnemyWidth = 40.0f;
@@ -45,18 +57,16 @@ protected:
     std::vector<CMPUT350::Point2D> mPath;
     float mPathDistance = 0.0f;
     float mRotation = 0.0f;
-    bool mFollowingPath = false;
-
-    // The enemy's home spot in the formation. It flies back here after every attack.
     CMPUT350::Point2D mFormationLocation;
-    // True while the enemy is flying back home after an attack
-    bool mReturningToFormation = false;
+
+    EnemyState mState = EnemyState::Entering;
     // True once Galaga has been told this enemy died, so it is only reported once
     bool mDeathReported = false;
 
     CMPUT350::Point2D KeepOnScreen(CMPUT350::GameContext* context, CMPUT350::Point2D p) const;
 
 private:
+    bool AdvanceAlongPath();
     void OnPathFinished();
 };
 
