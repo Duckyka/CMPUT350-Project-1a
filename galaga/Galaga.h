@@ -47,7 +47,8 @@ private:
 
     void ResetGame(GameContext* context);
     void LaunchAttackingEnemy(GameContext* context);
-    std::vector<Point2D> GenerateBezierPath(int waveIndex, int currShipsInWave);
+    std::vector<CMPUT350::Point2D> GenerateBezierPath(int waveIndex, CMPUT350::Point2D slot) const;
+    CMPUT350::Point2D GetFormationSlot(int row, int col) const;
 
     size_t mScreenWidth;
     size_t mScreenHeight;
