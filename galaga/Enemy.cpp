@@ -203,25 +203,12 @@ bool Enemy::IsAlive() const
 }
 
 /*
-Output: the Enemy's main bounding box (the body). The engine uses it
-        for collision checks.
-
-When the enemy turns, its drawn rectangle turns too, but the engine can only
-check boxes that line up with the screen. So we build the smallest
-screen-aligned box that still fits around the turned rectangle.
+Output: the Enemy's bounding box in local space (its body, centered on (0, 0)).
+        The engine moves and turns it to the screen.
 */
 const CMPUT350::Rect& Enemy::GetBounds()
 {
-    float c = std::fabs(std::cos(mRotation));
-    float s = std::fabs(std::sin(mRotation));
-
-    // Width and height of the box around the turned rectangle
-    float width = mBounds.width * c + mBounds.height * s;
-    float height = mBounds.width * s + mBounds.height * c;
-
-    // mBounds is centered on the enemy, so center the new box on the enemy too
-    mWorldBounds = CMPUT350::Rect(mLocation.x - width / 2.0f, mLocation.y - height / 2.0f, width, height);
-    return mWorldBounds;
+    return mBounds;
 }
 
 /*

@@ -202,7 +202,12 @@ void GameEngine::Run()
         {
             auto collidable = std::dynamic_pointer_cast<CollisionObject>(obj);
             if (collidable) {
-                entries.push_back({collidable, collidable->GetBounds(), {}, false});
+                // Objects give their bounds in local space. Move and turn them
+                // to the screen; a turned box becomes the box around it.
+                mDrawContext->SetContextOffset(collidable->GetLocation());
+                mDrawContext->SetContextRotation(collidable->GetRotation());
+                Rect screenBounds = mDrawContext->Transform(collidable->GetBounds());
+                entries.push_back({collidable, screenBounds, {}, false});
             }
         }
 

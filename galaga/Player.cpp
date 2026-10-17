@@ -190,15 +190,15 @@ bool Player::IsAlive() const
 }
 
 /*
-Output: a screen-space box around the whole ship (body, wings and nose).
+Output: a local-space box around the whole ship (body, wings and nose).
         The engine checks this box first, so it must cover every shape.
 */
 const CMPUT350::Rect& Player::GetBounds()
 {
-    mWorldBounds = mBounds + mLocation;
-    mWorldBounds |= shipWingBounds + mLocation;
-    mWorldBounds |= ShipFrontBounds + mLocation;
-    return mWorldBounds;
+    mShipBounds = mBounds;
+    mShipBounds |= shipWingBounds;
+    mShipBounds |= ShipFrontBounds;
+    return mShipBounds;
 }
 
 void Player::SetPaused(bool paused)
