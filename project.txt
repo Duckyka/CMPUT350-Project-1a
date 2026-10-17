@@ -1,0 +1,13 @@
+Our implementation of the Galaga game followed the guidelines and original source game as closely as we could achieve. We implemented
+the galaga game as a finite state machine that managed the gameplay through several stages--waiting on coins, startup, waves, gameplay, and gameover.
+As with the original game, we designed our Galaga to be played infinitely until the player eventually loses all their lives during gameplay. Players
+first insert coins and start the game before enemies flow onto the screen in waves, falling into formation at the top of the screen. Players then take control
+of their ship at the bottom and shoot to destroy the enemies, which in turn fire back and periodically advance to attack the player. There are 3 types of enemies
+that have unique attack patterns the player must avoid in order to stay alive. Once all enemies are killed, the player advances to the next level. If the player loses
+all of their lives, the game is reset to the main screen, ready to be played again. 
+
+Breakdown of work: 
+Kieran: Galaga, GameEngine, NotificationManager, Bezier, MathUtils
+Jensen: CollisionObject, DrawContext, Enemeies, Bullets, Player, MathUtils
+
+We did not use AI for this project. 
