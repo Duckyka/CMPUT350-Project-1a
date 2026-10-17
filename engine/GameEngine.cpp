@@ -215,19 +215,17 @@ namespace CMPUT350 {
                 for (size_t j = i + 1; j < collidables.size(); ++j)
                 {
                     //Check if not colliding to determine if objects do collide
-                    const Rect &r1 = collidables[i]->GetBounds();
-                    const Rect &r2 = collidables[j]->GetBounds();
-                    bool overlap = !(
-                        (r1.topLeft.x + r1.width) < r2.topLeft.x ||
-                        r1.topLeft.x > (r2.topLeft.x + r2.width) ||
-                        (r1.topLeft.y + r1.height) < r2.topLeft.y ||
-                        r1.topLeft.y > (r2.topLeft.y + r2.height)
-                    );
-                    if (overlap)
-                    {
-                        collidables[i]->CollisionEnter(collidables[j]);
-                        collidables[j]->CollisionEnter(collidables[i]);
-                    }
+                    auto &a = collidables[i];
+                    auto &b = collidables[j];
+
+                    // Cheap check first: skip this pair if the bounding boxes don't touch
+                    if (!Overlaps(a->GetBounds(), b->GetBounds()))
+                        continue;
+
+                    // Bounding boxes touch. For now, behave the same as before.
+                    // Later this becomes the shape-by-shape check with ShapesCollide().
+                    a->CollisionEnter(b);
+                    b->CollisionEnter(a);
                 }
             }
 

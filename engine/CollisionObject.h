@@ -28,6 +28,15 @@ struct Shape {
     ShapeType t;
 };
 
+// Shape Collisions helpers
+bool Overlaps(const Rect &a, const Rect &b);
+bool LineHitsLine(const Line &l, const Line &o, float &t);
+bool LineHitsCirlce(const Line &l, const Circle &c, float &t);
+bool LineHitsRect(const Line &l, const Rect &r, float &t);
+bool CircleHitsCircle(const Circle &a, const Circle &b);
+bool CircleHitsRect(const Circle &c, const Rect &r);
+Shape ToWorld(const Shape &s, Point2D location, float rotation);
+bool ShapesCollide(const Shape &a, const Shape &b, bool &hasPoint, Point2D &worldPoint);
 
 class CollisionObject : public GraphicsObject {
 public:
@@ -37,7 +46,7 @@ public:
     virtual const Rect &GetBounds() = 0;
     // Return the internal shapes in the object. Shapes can be:
     // lines, points/circles, or axis-aligned rectangles
-    //virtual const std::vector<Shape> &GetShapes() = 0;
+    virtual const std::vector<Shape> &GetShapes() = 0;
 };
 
 }  // namespace CMPUT350
