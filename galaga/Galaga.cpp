@@ -5,8 +5,10 @@
 #include <Keyboard.h>
 #include <GameObject.h>
 #include <DrawContext.h>
+#include <memory>
 #include <string>
 #include "Bezier.h"
+#include "MathUtil.h"
 
     // struct Line
     // {
@@ -156,27 +158,38 @@ void Galaga::UpdateWaves(GameContext* context)
     float deltaTime = 1.0f / 30.0f;
     mSpawnTimer += deltaTime;
 
-    // TESTING: only 1 wave so attacks start sooner. Set back to 5 for the full game.
-    constexpr int kNumWaves = 1;
+    // 5 waves of 8 ships
+    constexpr int kNumWaves = 5;
     if (mCurrentWaveIndex < kNumWaves)
     {
 
         if (mShipsSpawnedInWave < 8 && mSpawnTimer >= 0.4f)
         {
             mSpawnTimer = 0.0f;
-            std::vector<Point2D> path = GenerateBezierPath(mCurrentWaveIndex, mShipsSpawnedInWave);
-            CMPUT350::Point2D spawnLocation({mScreenWidth * 0.5f, mScreenHeight * 0.5f});
-            std::shared_ptr<Enemy> enemy;
-            switch (mShipsSpawnedInWave % 3)
-            {
-                case 0:  enemy = std::make_shared<Bee>(spawnLocation); break;
-                case 1:  enemy = std::make_shared<Butterfly>(spawnLocation); break;
-                default: enemy = std::make_shared<Boss>(spawnLocation); break;
-            }
 
+            // Each wave filles one row; each ship in the wave takes the next column
+            int row = mCurrentWaveIndex;
+            int col = mShipsSpawnedInWave;
+
+            // Where this ship will sit in the formation
+            CMPUT350::Point2D slot = GetFormationSlot(row, col);
+            // The curve it flies to get there (ends exactly at the slot)
+            std::vector<Point2D> path = GenerateBezierPath(mCurrentWaveIndex, slot);
+
+            // Bosses on the top row, Butterflies in the middle, Bees at the bottom
+            std::shared_ptr<Enemy> enemy;
+            if (row == 0) {
+                enemy = std::make_shared<Boss>(slot, path);
+            }
+            else if (row <= 2) {
+                enemy = std::make_shared<Butterfly>(slot, path);
+            }
+            else {
+                enemy = std::make_shared<Bee>(slot, path);
+            }
+            
             context->mEngineView->AddGameObject(enemy);
             mEnemies.push_back(enemy);
-
             mActiveEnemyCount++;
             mShipsSpawnedInWave++;
         }
@@ -187,8 +200,20 @@ void Galaga::UpdateWaves(GameContext* context)
         }
     }
     else
-    {
-        ChangeState(GameState::Gameplay);
+    {  
+        // All ships have spawned; wait until every one has reached its slot
+        bool allSeated = true;
+        for (auto& weakEnemy: mEnemies) {
+            auto enemy = weakEnemy.lock();
+            if (enemy && !enemy->IsInFormation()) {
+                allSeated = false;
+            }
+        }
+        
+        // Only start attacking once the whole formation is in place
+        if (allSeated) {
+            ChangeState(GameState::Gameplay);
+        }
     }
 }
 
@@ -244,39 +269,32 @@ void Galaga::ResetGame(GameContext* context)
     }
 }
 
-std::vector<Point2D> Galaga::GenerateBezierPath(int waveIndex, int currShipsInWave)
+/*
+Output: 7 bezier control points (2 cubic curves joined together). 
+The ship drops in from the top, loops through the lower screen,
+then rises up and ends exactly at its formation slot
+*/
+std::vector<Point2D> Galaga::GenerateBezierPath(int waveIndex, CMPUT350::Point2D slot) const
 {
     float width = static_cast<float>(mScreenWidth);
     float height = static_cast<float>(mScreenHeight);
+    float cx = width / 2.0f;
 
-    float shipWidth = (width - 20) / 10 * currShipsInWave;
-    float shipHeight = 20 * waveIndex;
+    // Flip the path left/right on every other wave
+    float side = (waveIndex % 2 == 0) ? 1.0f : -1.0f;
 
-    if (mCurrentLevel % 5 == 1)
-    {
-        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
-        return Bezier(points).GetCurve();
-    }
-    else if (mCurrentLevel % 5 == 2)
-    {
-        std::vector<Point2D> points = {{ width * 0.0f, height * 0.5f },{ width * 0.65f, height * 0.40f },{ width * 0.30f, height * 0.30f },{ shipWidth, shipHeight }};
-        return Bezier(points).GetCurve();
-    }
-    else if (mCurrentLevel % 5 == 3)
-    {
-        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
-        return Bezier(points).GetCurve();
-    }
-    else if (mCurrentLevel % 5 == 4)
-    {
-        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
-        return Bezier(points).GetCurve();
-    }
-    else
-    {
-        std::vector<Point2D> points = {{ width * 0.0f, height * 0.0f },{ width * 0.2f, height * 0.2f },{ width * 0.8f, height * 0.2f },{ shipWidth, shipHeight }};
-        return Bezier(points).GetCurve();
-    }
+    // First curve: drop in from above the screen and swing out to one side
+    Point2D p0(cx - side * width * 0.15f, -40.0f);
+    Point2D p1(cx - side * width * 0.15f, height * 0.30f);
+    Point2D p2(cx + side * width * 0.35f,height * 0.40f);
+    Point2D p3(cx + side * width * 0.25f, height * 0.60f);
+
+    // Second curve: loop back and rise up into the slot
+    Point2D p4 = p3 + (p3 - p2);
+    Point2D p5(slot.x, slot.y + 250.0f);
+    Point2D p6 = slot;
+
+    return {p0, p1, p2, p3, p4, p5, p6};
 }
 
 void Galaga::RenderUI(GameContext* context)
@@ -292,4 +310,15 @@ void Galaga::RenderUI(GameContext* context)
         std::string text = "LEVEL " + std::to_string(mCurrentLevel);
         context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::green);
     }
+}
+
+CMPUT350::Point2D Galaga::GetFormationSlot(int row, int col) const {
+    constexpr int kCols = 8;
+    constexpr float kSpacingX = 60.0f;
+    constexpr float kSpacingY = 50.0f;
+    constexpr float kTopY = 120.0f;
+
+    float gridWidth = (kCols - 1) * kSpacingX;
+    float left = mScreenWidth / 2.0f - gridWidth / 2.0f;
+    return CMPUT350::Point2D(left + col * kSpacingX, kTopY + row * kSpacingY);
 }
