@@ -49,6 +49,9 @@ private:
     void LaunchAttackingEnemy(GameContext* context);
     std::vector<CMPUT350::Point2D> GenerateBezierPath(int waveIndex, CMPUT350::Point2D slot) const;
     CMPUT350::Point2D GetFormationSlot(int row, int col) const;
+    void SpawnPlayer(GameContext* context);
+    bool AllEnemiesInFormation() const;
+    void ClearBoard();
 
     size_t mScreenWidth;
     size_t mScreenHeight;
@@ -71,6 +74,8 @@ private:
     std::vector<std::weak_ptr<Enemy>> mEnemies;
 
     float mAttackCooldown;
+    bool mWaitingToRespawn = false;
+    float mRespawnTimer = 0.0f;
 };
 
 #endif //GALAGA_H

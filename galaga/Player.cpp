@@ -1,5 +1,7 @@
 #include "Player.h"
+#include <memory>
 #include "Bullet.h"
+#include "Enemy.h"
 
 /*
 Initialize the Player's Bounding Boxes
@@ -94,12 +96,16 @@ void Player::Update(CMPUT350::GameContext* context)
 }
 
 /*
-Called once per frame after collisions have been processed
-Left empty because the Player has no logic that depends on the
-result of collisions, handles in Project 1b.
+Tell the Galaga class when the Player dies
+CollisionEnter has no GameContext, so it only marks the Player dead and the notification
+is sent here, later in the same frame
 */
 void Player::LateUpdate(CMPUT350::GameContext* context)
 {
+    if (!mAlive && !mDeathReported) {
+        mDeathReported = true;
+        context->mNotificationManager->Notify("PlayerDied");
+    }
 }
 
 /*
@@ -186,11 +192,26 @@ float Player::GetRotation() const
 }
 
 /*
-Called by the engine when the Player's bounding box overlaps another object.
-TODO in project 1b
+Called by the engine when the Player's shapes touches another object
 */
 void Player::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
+    // Already dead this frame, nothing more to do
+    if (!mAlive) {
+        return;
+    }
+
+    // Hit by an enemy bullet
+    auto bullet = std::dynamic_pointer_cast<Bullet>(obj);
+    if (bullet && !bullet->IsPlayerBullet()) {
+        Kill();
+        return;
+    }
+
+    // Crashed into an enemy
+    if (std::dynamic_pointer_cast<Enemy>(obj)) {
+        Kill();
+    }
 }
 
 /*

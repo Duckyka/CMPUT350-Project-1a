@@ -51,6 +51,7 @@ private:
     float mRotation = 0;
 
     bool mAlive = true;
+    bool mDeathReported = false;
     bool mFireRequested = false;
     int mCooldown = 0;
     bool mMovingLeft = false;

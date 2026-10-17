@@ -86,21 +86,26 @@ void Galaga::ReceiveNotification(const std::string& message)
         }
     }
 
-    if (message == "EnemyDied")
+    bool playing (mCurrentState == GameState::Waves || mCurrentState == GameState::Gameplay);
+    if (message == "EnemyDied" && playing)
     {
         mScore += 100;
         mActiveEnemyCount--;
-    } else if (message == "PlayerDied")
+    } 
+    else if (message == "PlayerDied" && playing)
     {
         mLives--;
-        if (auto p = mPlayer.lock())
-        {
-            std::dynamic_pointer_cast<Player>(p)->SetPaused(true);
-        }
         if (mLives <= 0)
         {
+            ClearBoard();
             ChangeState(GameState::GameOver);
         }
+        else {
+            // Wait for every enemy to return home before respawning
+            mWaitingToRespawn = true;
+            mRespawnTimer = 0.0f;
+        }
+        
     }
 }
 
@@ -133,18 +138,10 @@ void Galaga::UpdateStartup(GameContext* context)
     {
         ResetGame(context);
 
-        if (mCurrentLevel == 1)
-        {
-            auto player = std::make_shared<Player>(CMPUT350::Point2D(768 / 2, 900));
-            mPlayer = player;
-            context->mEngineView->AddGameObject(player);
-            std::weak_ptr<GameObject> playerPtr = shared_from_this();
-            context->mNotificationManager->Register(playerPtr, "MoveLeftDown");
-            context->mNotificationManager->Register(playerPtr, "MoveLeftUp");
-            context->mNotificationManager->Register(playerPtr, "MoveRightDown");
-            context->mNotificationManager->Register(playerPtr, "MoveRightUp");
-            context->mNotificationManager->Register(playerPtr, "Shoot");
+        if (mPlayer.expired()) {
+            SpawnPlayer(context);
         }
+        mWaitingToRespawn = false;
     }
     if (mStateTimer >= 3.0f)
     {
@@ -221,16 +218,35 @@ void Galaga::UpdateWaves(GameContext* context)
 void Galaga::UpdateGameplay(GameContext* context)
 {
     float deltaTime = 1.0f / 30.0f;
+    
+    // Level cleared: go to next level
+    if (mActiveEnemyCount <= 0) {
+        mCurrentLevel++;
+        ChangeState(GameState::Startup);
+        return;
+    }
+
+    if (mWaitingToRespawn) {
+        // No new attacks while the player is dead, wait for divers to return home
+        if (!AllEnemiesInFormation()) {
+            return;
+        }
+
+        // Everyone is home: show "READY" for 2 seconds
+        mRespawnTimer += deltaTime;
+        if (mRespawnTimer >= 2.0f) {
+            SpawnPlayer(context);
+            mWaitingToRespawn = false;
+            mAttackCooldown = 3.0f;
+        }
+        return;
+    }
+    
     mAttackCooldown -= deltaTime;
-    if (mAttackCooldown <= 0.0f && mActiveEnemyCount > 0)
+    if (mAttackCooldown <= 0.0f)
     {
         mAttackCooldown = 3.5f;
         LaunchAttackingEnemy(context);
-    }
-    if (mActiveEnemyCount <= 0)
-    {
-        mCurrentLevel++;
-        ChangeState(GameState::Startup);
     }
 }
 
@@ -238,6 +254,8 @@ void Galaga::UpdateGameOver(GameContext* context)
 {
     if (mStateTimer >= 5.0f)
     {
+        mCurrentLevel = 1;
+        mWaitingToRespawn = false;
         ChangeState(GameState::WaitingForCoins);
     }
 }
@@ -324,6 +342,9 @@ void Galaga::RenderUI(GameContext* context)
     }
 }
 
+/*
+Get the row and column of the slot that the enemy is supposed to get into
+*/
 CMPUT350::Point2D Galaga::GetFormationSlot(int row, int col) const {
     constexpr int kCols = 8;
     constexpr float kSpacingX = 60.0f;
@@ -333,4 +354,47 @@ CMPUT350::Point2D Galaga::GetFormationSlot(int row, int col) const {
     float gridWidth = (kCols - 1) * kSpacingX;
     float left = mScreenWidth / 2.0f - gridWidth / 2.0f;
     return CMPUT350::Point2D(left + col * kSpacingX, kTopY + row * kSpacingY);
+}
+
+/*
+Create a new player ship at the bottom of the screen.
+The Player registers for its own key notifications in
+Player::Initialize.
+*/
+void Galaga::SpawnPlayer(GameContext* context)
+{
+    auto player = std::make_shared<Player>(CMPUT350::Point2D(mScreenWidth / 2.0f, mScreenHeight - 124.0f));
+    mPlayer = player;
+    context->mEngineView->AddGameObject(player);
+}
+
+/*
+Output: true if every living enemy is sitting in its formation slot
+*/
+bool Galaga::AllEnemiesInFormation() const {
+    for (auto& weakEnemy : mEnemies) {
+        auto enemy = weakEnemy.lock();
+        if (enemy && enemy->IsAlive() && !enemy->IsInFormation()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*
+Remove the player and every enemy from the engine (used on game over)
+Killed objects are removed by the engine at the start of the next frame
+*/
+void Galaga::ClearBoard() {
+    if (auto player = mPlayer.lock()) {
+        player->Kill();
+    }
+
+    for (auto& weakEnemy : mEnemies) {
+        if (auto enemy = weakEnemy.lock()) {
+            enemy->Kill();
+        }
+    }
+    mEnemies.clear();
+    mActiveEnemyCount = 0;
 }
