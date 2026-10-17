@@ -6,7 +6,7 @@
 class Boss : public Enemy
 {
 public:
-    Boss(CMPUT350::Point2D loc);
+    Boss(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& entryPath = {});
 
     bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
     void RenderForeground(CMPUT350::GameContext* context) override;

@@ -93,6 +93,13 @@ public:
         return bounds;
     }
 
+    // One circle centered on the ball, in local space
+    const std::vector<CMPUT350::Shape>& GetShapes() override
+    {
+        mShapes = {CMPUT350::Shape(CMPUT350::Circle(CMPUT350::Point2D(0, 0), mRadius))};
+        return mShapes;
+    }
+
     bool IsAlive() const override
     {
         return mNumCollisions < 10;
@@ -122,6 +129,7 @@ private:
 
     int mRadius, mNumCollisions, mFrameCollisions;
     CMPUT350::Point2D mLoc, mSpeed, mSpeedNext, mCollisionPoint;
+    std::vector<CMPUT350::Shape> mShapes;
 };
 
 // Shared randoms across all balls

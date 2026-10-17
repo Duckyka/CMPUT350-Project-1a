@@ -1,6 +1,6 @@
 #include "Butterfly.h"
 
-Butterfly::Butterfly(CMPUT350::Point2D loc) : Enemy(loc)
+Butterfly::Butterfly(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& entryPath) : Enemy(loc, entryPath)
 {
 }
 

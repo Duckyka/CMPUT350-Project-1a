@@ -204,29 +204,111 @@ namespace CMPUT350 {
             }
 
             // 4. Process collision events
-            std::vector<std::shared_ptr<CollisionObject>> collidables;
+            struct CollisionEntry
+            {
+                std::shared_ptr<CollisionObject> object;
+                Rect bounds;                       // screen-space bounding box
+                std::vector<Shape> screenShapes;   // filled in only when first needed
+                bool shapesReady = false;
+            };
+
+            std::vector<CollisionEntry> entries;
             for (auto &obj : mGameObjects)
             {
-                auto c = std::dynamic_pointer_cast<CollisionObject>(obj);
-                if (c) collidables.push_back(c);
+                auto collidable = std::dynamic_pointer_cast<CollisionObject>(obj);
+                if (collidable) entries.push_back({collidable, collidable->GetBounds(), {}, false});
             }
-            for (size_t i = 0; i < collidables.size(); ++i)
-            {
-                for (size_t j = i + 1; j < collidables.size(); ++j)
+            
+            // Sort by the left edge so we can stop checking once boxes are too far right
+            std::sort(entries.begin(), entries.end(),
+                        [](const CollisionEntry &left, const CollisionEntry &right) {
+                            return left.bounds.topLeft.x < right.bounds.topLeft.x;
+                        });
+
+            // Converts an object's shapes to screen space the first time they're needed
+            auto getScreenShapes = [](CollisionEntry &entry) -> const std::vector<Shape> & {
+                if (!entry.shapesReady)
                 {
-                    //Check if not colliding to determine if objects do collide
-                    const Rect &r1 = collidables[i]->GetBounds();
-                    const Rect &r2 = collidables[j]->GetBounds();
-                    bool overlap = !(
-                        (r1.topLeft.x + r1.width) < r2.topLeft.x ||
-                        r1.topLeft.x > (r2.topLeft.x + r2.width) ||
-                        (r1.topLeft.y + r1.height) < r2.topLeft.y ||
-                        r1.topLeft.y > (r2.topLeft.y + r2.height)
-                    );
-                    if (overlap)
-                    {
-                        collidables[i]->CollisionEnter(collidables[j]);
-                        collidables[j]->CollisionEnter(collidables[i]);
+                    Point2D location = entry.object->GetLocation();
+                    float rotation = entry.object->GetRotation();
+                    for (const Shape &localShape : entry.object->GetShapes())
+                        entry.screenShapes.push_back(ToWorld(localShape, location, rotation));
+                    entry.shapesReady = true;
+                }
+                return entry.screenShapes;
+            };
+
+            // j starts at i + 1 so each pair is only compared one
+            for (size_t i = 0; i < entries.size(); ++i)
+            {
+                CollisionEntry &entryA = entries[i];
+                float rightEdgeA = entryA.bounds.topLeft.x + entryA.bounds.width;
+                
+                for (size_t j = i + 1; j < entries.size(); ++j)
+                {
+                    CollisionEntry &entryB = entries[j];
+
+                    // Sorted by left edge: if B starts past A's right edge, so does everything after B
+                    if (entryB.bounds.topLeft.x > rightEdgeA)
+                        break;
+
+                    // Cheap check first: skip this pair if the bounding boxes don't touch
+                    if (!Overlaps(entryA.bounds, entryB.bounds))
+                        continue;
+
+                    const std::vector<Shape> &screenShapesA = getScreenShapes(entryA);
+                    const std::vector<Shape> &screenShapesB = getScreenShapes(entryB);
+
+                    // Test every shape in A against every shape in B.
+                    // If lines are involved, keep the hit closest to the start of the line.
+                    bool isColliding = false;
+                    bool hasCollisionPoint = false;
+                    float closestFraction = 2; // anything above 1 means "no point yet"
+                    Point2D closestPoint;
+
+                    for (const Shape &shapeA : screenShapesA) {
+                        for (const Shape &shapeB : screenShapesB) {
+                            
+                            bool hitHasPoint;
+                            Point2D hitPoint;
+                            float hitFraction;
+                            if (!ShapesCollide(shapeA, shapeB, hitHasPoint, hitPoint, hitFraction)) {
+                                continue;
+                            }
+                            isColliding = true;
+                            if (hitHasPoint && hitFraction < closestFraction) {
+                                closestFraction = hitFraction;
+                                closestPoint = hitPoint;
+                                hasCollisionPoint = true;
+                            }
+                        }
+                    }
+
+                    if (!isColliding) {
+                        continue;
+                    }
+                    
+                    auto &objectA = entryA.object;
+                    auto &objectB = entryB.object;
+                    if (hasCollisionPoint)
+                    {   
+                        // Give each object the collision point in its own local space
+                        mDrawContext->SetContextOffset(objectA->GetLocation());
+                        mDrawContext->SetContextRotation(objectA->GetRotation());
+                        Point2D localPointA = mDrawContext->ReverseTransform(closestPoint);
+
+                        mDrawContext->SetContextOffset(objectB->GetLocation());
+                        mDrawContext->SetContextRotation(objectB->GetRotation());
+                        Point2D localPointB = mDrawContext->ReverseTransform(closestPoint);
+
+                        // Bounding boxes touch. For now, behave the same as before.
+                        // Later this becomes the shape-by-shape check with ShapesCollide().
+                        objectA->CollisionEnter(objectB, localPointA);
+                        objectB->CollisionEnter(objectA, localPointB);
+                    }
+                    else {
+                        objectA->CollisionEnter(objectB);
+                        objectB->CollisionEnter(objectA);
                     }
                 }
             }

@@ -27,6 +27,7 @@ public:
     // Collision Object Functions
     void CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj) override;
     const CMPUT350::Rect& GetBounds() override;
+    const std::vector<CMPUT350::Shape>& GetShapes() override;
 
 private:
     CMPUT350::Point2D mLocation;
@@ -34,6 +35,8 @@ private:
     bool mIsPlayer;
     bool mAlive;
     CMPUT350::Rect mBounds;
+    // Collision shapes in local space, returned by GetShapes()
+    std::vector<CMPUT350::Shape> mShapes;
     
     static constexpr float kSpeed = 20.0f; // Adjustable
     static constexpr int kSize = 6;

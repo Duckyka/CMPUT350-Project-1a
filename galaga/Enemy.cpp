@@ -3,8 +3,6 @@
 #include "Player.h"
 
 namespace {
-    constexpr float kEnemyWidth = 30.0f;
-    constexpr float kEnemyHeight = 25.0f;
     constexpr int kSamplesPerSegment = 100;
     constexpr float kPathSpeed = 6.0f;
 
@@ -41,14 +39,23 @@ namespace {
 }
 
 /*
-Initialize the Enemy's bounding box
-The starting location is also remembered as the enemy's spot in the formation
+Initialize the Enemy's bounding box and start it flying in along its entry path
 */
-Enemy::Enemy(CMPUT350::Point2D loc)
-{
-    mLocation = loc;
-    mFormationLocation = loc;
+Enemy::Enemy(CMPUT350::Point2D formationLoc, const std::vector<CMPUT350::Point2D>& entryPath) {
+    mFormationLocation = formationLoc;
     mBounds = CMPUT350::Rect(-kEnemyWidth / 2.0f, -kEnemyHeight / 2.0f, kEnemyWidth, kEnemyHeight);
+
+    // No path give: just sit in the slot
+    if (entryPath.empty()) {
+        mLocation = formationLoc;
+        mState = EnemyState::InFormation;
+        return;
+    }
+
+    // Start at the beginning of the path (off-screen), not at the slot
+    mLocation = entryPath.front();
+    FollowPath(entryPath);
+    mState = EnemyState::Entering;
 }
 
 void Enemy::Initialize(CMPUT350::GameContext* context)
@@ -56,13 +63,31 @@ void Enemy::Initialize(CMPUT350::GameContext* context)
 }
 
 /*
-Move the enemy along its current path by the same distance every frame
+Move the enemy each frame based on its current state.
+In formation it stays in its slot; otherwise it moves along its current path
 */
 void Enemy::Update(CMPUT350::GameContext* context)
 {
+    switch (mState) {
+        case EnemyState::InFormation:
+            break;
+        case EnemyState::Entering:
+        case EnemyState::Attacking:
+        case EnemyState::Returning:
+            if (AdvanceAlongPath()) {
+                OnPathFinished();
+            }
+            break;        
+    }
+}
+
+/*
+Move kPathSpeed pixels further along mPath and update mLocation and mRotation
+*/
+bool Enemy::AdvanceAlongPath() {
     // Not on a path, so the enemy is resting in formation
-    if (!mFollowingPath) {
-        return;
+    if (mPath.empty()) {
+        return true;
     }
 
     // Move a fixed number of pixels further along the path this frame
@@ -80,14 +105,14 @@ void Enemy::Update(CMPUT350::GameContext* context)
             // Face the direction the enemy is moving
             CMPUT350::Point2D direction = mPath[i + 1] - mPath[i];
             mRotation = std::atan2(direction.y, direction.x);
-            return;
+            return false;
         }
         travelled += segmentLength;
     }
 
     // Past the end of the path: snap to the last point and decide what to do next
     mLocation = mPath.back();
-    OnPathFinished();
+    return true;
 }
 
 /*
@@ -97,19 +122,23 @@ After flying back, stop and sit still in formation, facing forward.
 */
 void Enemy::OnPathFinished()
 {
-    if (!mReturningToFormation) {
-        // The attack just ended, so head home in a straight line.
-        // FollowPath keeps mFollowingPath true, so Attack() will refuse new attacks until the enemy is home.
-        mReturningToFormation = true;
-        FollowPath({mLocation, mLocation, mFormationLocation, mFormationLocation});
-        return;
+    switch (mState) {
+        case EnemyState::Entering:
+        case EnemyState::Returning:
+            mLocation = mFormationLocation;
+            mRotation = 0.0f;
+            mState = EnemyState::InFormation;
+            break;
+        
+        case EnemyState::Attacking:
+            FollowPath({mLocation, mLocation, mFormationLocation, mFormationLocation});
+            mState = EnemyState::Returning;
+            break;
+        
+        case EnemyState::InFormation:
+            // Not on a path, nothing to do
+            break;
     }
-
-    // Back home: stop moving and face forward again
-    mLocation = mFormationLocation;
-    mRotation = 0.0f;
-    mReturningToFormation = false;
-    mFollowingPath = false;
 }
 
 /*
@@ -248,5 +277,21 @@ void Enemy::FollowPath(const std::vector<CMPUT350::Point2D>& controlPoints)
     }
 
     mPathDistance = 0.0f;
-    mFollowingPath = true;
+}
+
+/*
+Output: the enemy's collision shape in local space (its body rectangle).
+        The engine rotates and moves it to screen space before testing.
+*/
+const std::vector<CMPUT350::Shape>& Enemy::GetShapes()
+{
+    mShapes = {CMPUT350::Shape(mBounds)};
+    return mShapes;
+}
+
+/*
+Output: true if the enemy is sitting in its formation slot (not entering, attacking or returning)
+*/
+bool Enemy::IsInFormation() const {
+    return mState == EnemyState::InFormation;
 }
