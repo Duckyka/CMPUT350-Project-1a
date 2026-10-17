@@ -2,7 +2,6 @@
 #include "DrawContext.h"
 #include "Player.h"
 #include "Enemy.h"
-#include <algorithm>
 
 /*
 Create a bullet
@@ -19,7 +18,7 @@ Bullet::Bullet(CMPUT350::Point2D location, CMPUT350::Point2D heading, bool playe
       mIsPlayer(player),
       mAlive(true),
       mParent(parent),
-      mBounds(location - (kSize / 2.0f), kSize, kSize)
+      mBounds(-kSize / 2.0f, -kSize / 2.0f, kSize, kSize)
 {
     mHeading.Normalize();
 }
@@ -42,8 +41,7 @@ void Bullet::Initialize(CMPUT350::GameContext* context)
 
 /*
 Called once per frame before collisions are processed.
-Moves the bullet kSpeed pixels along its heading. The bounding box covers
-the whole line from last frame's position to the new one.
+Moves the bullet kSpeed pixels along its heading.
 */
 void Bullet::Update(CMPUT350::GameContext* context)
 {
@@ -57,14 +55,6 @@ void Bullet::Update(CMPUT350::GameContext* context)
     // Move along the heading
     mPrevLocation = mLocation;
     mLocation += mHeading * kSpeed;
-
-    // Box around the line from the old position to the new one
-    float half = kSize / 2.0f;
-    float left = std::min(mPrevLocation.x, mLocation.x) - half;
-    float top = std::min(mPrevLocation.y, mLocation.y) - half;
-    float right = std::max(mPrevLocation.x, mLocation.x) + half;
-    float bottom = std::max(mPrevLocation.y, mLocation.y) + half;
-    mBounds = CMPUT350::Rect(left, top, right - left, bottom - top);
 }
 
 /*
@@ -182,10 +172,14 @@ bool Bullet::IsAlive() const
 }
 
 /*
-Output: the bullet's bounding box in screen space.
+Output: the bullet's bounding box in local space. It covers the whole line
+        from last frame's position to the current one (0, 0).
 */
 const CMPUT350::Rect& Bullet::GetBounds()
 {
+    float half = kSize / 2.0f;
+    mBounds = CMPUT350::Rect(-half, -half, kSize, kSize);
+    mBounds |= CMPUT350::Rect(mPrevLocation - mLocation - half, kSize, kSize);
     return mBounds;
 }
 

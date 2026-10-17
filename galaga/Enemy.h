@@ -43,8 +43,8 @@ public:
     virtual std::string GetTypeName() const = 0;
 
 protected:
+    // Body rectangle in local space, centered on (0, 0)
     CMPUT350::Rect mBounds;
-    CMPUT350::Rect mWorldBounds;
     // Collision shapes in local space, returned by GetShapes()
     std::vector<CMPUT350::Shape> mShapes;
     CMPUT350::Point2D mLocation;

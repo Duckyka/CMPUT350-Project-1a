@@ -19,18 +19,47 @@ bool Overlaps(const Rect &a, const Rect &b) {
 }
 
 /*
-Checks if directed line l crosses line o
-Output: true on a hit, t = fraction along l where it crosses (0..1)
+Checks if directed line l crosses or overlaps line o
+Output: true on a hit, t = fraction along l of the first point that touches o (0..1)
 */
 bool LineHitsLine(const Line &l, const Line &o, float &t) {
     Point2D lineDirection = l.p2 - l.p1;
     Point2D otherDirection = o.p2 - o.p1;
-    float directionCross = Point2D::Cross(lineDirection,otherDirection);
-    if (directionCross == 0) {
-        return false; // parellel
+    Point2D startToOtherStart = o.p1 - l.p1;
+    float lineLengthSquared = lineDirection * lineDirection;
+    float directionCross = Point2D::Cross(lineDirection, otherDirection);
+
+    // A line with no length can't cross anything
+    if (lineLengthSquared == 0) {
+        return false;
     }
 
-    Point2D startToOtherStart = o.p1 - l.p1;
+    // Parallel lines (the cross is 0, allowing for tiny rounding errors from sin/cos)
+    float lengths = std::sqrt(lineLengthSquared * (otherDirection * otherDirection));
+    if (std::fabs(directionCross) <= 1e-4f * lengths) {
+        // They only touch if they lie on the same straight line.
+        // Distance from o's start to l's line = |cross| / length of l
+        float distanceApart = std::fabs(Point2D::Cross(startToOtherStart, lineDirection)) / std::sqrt(lineLengthSquared);
+        if (distanceApart > 0.01f) {
+            return false;
+        }
+
+        // Same straight line: find where o's two ends fall along l (0 = l's start, 1 = l's end)
+        float otherStart = (startToOtherStart * lineDirection) / lineLengthSquared;
+        float otherEnd = ((o.p2 - l.p1) * lineDirection) / lineLengthSquared;
+        float overlapStart = std::min(otherStart, otherEnd);
+        float overlapEnd = std::max(otherStart, otherEnd);
+
+        // The two pieces don't overlap
+        if (overlapEnd < 0 || overlapStart > 1) {
+            return false;
+        }
+
+        // First point along l that is on o
+        t = std::max(0.0f, overlapStart);
+        return true;
+    }
+
     float fractionOnLine = Point2D::Cross(startToOtherStart, otherDirection) / directionCross;
     float fractionOnOther = Point2D::Cross(startToOtherStart, lineDirection) / directionCross;
     if (fractionOnLine < 0 || fractionOnLine > 1 || fractionOnOther < 0 || fractionOnOther > 1) {

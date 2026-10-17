@@ -41,8 +41,8 @@ private:
     CMPUT350::Rect shipWingBounds;
     CMPUT350::Rect ShipFrontBounds;
 
-    // Body rect shifted to screen space, returned by GetBounds()
-    CMPUT350::Rect mWorldBounds;
+    // Box around the whole ship in local space, returned by GetBounds()
+    CMPUT350::Rect mShipBounds;
     // Collision shapes in local space, returned by GetShapes()
     std::vector<CMPUT350::Shape> mShapes;
     CMPUT350::Point2D mLocation;
