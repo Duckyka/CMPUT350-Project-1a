@@ -2,7 +2,10 @@
 
 namespace CMPUT350 {
 
-void GraphicsObject::RenderBackground(GameContext *contextrender) { return; }
-void GraphicsObject::RenderForeground(GameContext *contextrender) { return; }
+// Draw behind everything else. Does nothing by default.
+void GraphicsObject::RenderBackground(GameContext *context) {}
+
+// Draw in front of the background. Does nothing by default.
+void GraphicsObject::RenderForeground(GameContext *context) {}
 
 }  // namespace CMPUT350

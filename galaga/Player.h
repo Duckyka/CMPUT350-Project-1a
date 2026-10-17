@@ -20,8 +20,6 @@ public:
     void ReceiveNotification(const std::string &message) override;
     bool IsAlive() const override;
     void Kill() override;
-    // bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
-    //void ReceiveNotification(const std::string& key) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;
@@ -51,6 +49,7 @@ private:
     float mRotation = 0;
 
     bool mAlive = true;
+    bool mDeathReported = false;
     bool mFireRequested = false;
     int mCooldown = 0;
     bool mMovingLeft = false;

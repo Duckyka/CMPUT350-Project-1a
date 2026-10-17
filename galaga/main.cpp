@@ -1,12 +1,16 @@
-#include <random>
+#include <memory>
 #include "GameEngine.h"
-#include "MathUtil.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Stars.h"
-#include "Keyboard.h"
 #include "Galaga.h"
 
+/*
+Start the game. The Galaga object creates and manages every other object.
+*/
+int main()
+{
+    CMPUT350::GameEngine engine(768, 1024, "Galaga");
+    auto game = std::make_shared<Galaga>(768, 1024);
+    engine.AddGameObject(game);
+    engine.Run();
 // const int numRows = 5;
 // const int numCols = 8;
 // const float screenWidth = 768.0f;
@@ -458,7 +462,5 @@ int main()
         // engine.InstallKeyUpNotification(Key::Right, "MoveRightUp");
         // engine.InstallKeyDownNotification(Key::Space, "Shoot");
 
-        engine.Run();
-    }
     return 0;
 }

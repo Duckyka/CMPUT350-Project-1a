@@ -3,16 +3,25 @@
 
 namespace CMPUT350 {
 
-void GameObject::Initialize(GameContext *context) { 
-    return;
-}
-void GameObject::Update(GameContext *context) { return; }
-void GameObject::LateUpdate(GameContext *context) { return; }
-void GameObject::RenderUI(GameContext *contextrender) { return; }
-//---------------------------------------
-bool GameObject::HandleKeyEvent(GameContext *context, char key) { return false; }   // REMOVE THIS FUNCTION
-//---------------------------------------
+// Called once when the object is added to the engine. Does nothing by default.
+void GameObject::Initialize(GameContext *context) {}
+
+// Called every frame before collisions. Does nothing by default.
+void GameObject::Update(GameContext *context) {}
+
+// Called every frame after collisions. Does nothing by default.
+void GameObject::LateUpdate(GameContext *context) {}
+
+// Called every frame to draw on top of everything. Does nothing by default.
+void GameObject::RenderUI(GameContext *context) {}
+
+// Output: true while the object should stay in the engine. Always true by default.
 bool GameObject::IsAlive() const { return true; }
+
+// Tells the object to return false from IsAlive. Does nothing by default.
 void GameObject::Kill() {}
-void GameObject::ReceiveNotification(const std::string& key) { return; }
+
+// Called by the notification manager when a message the object registered for is sent.
+void GameObject::ReceiveNotification(const std::string& key) {}
+
 }  // namespace CMPUT350

@@ -25,8 +25,7 @@ bool Bee::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target
     // Pull the curve so the Bee comes down onto the target from above
     CMPUT350::Point2D pull2 = KeepOnScreen(context, end + CMPUT350::Point2D(0.0f, -400.0f));
 
-    FollowPath({start, pull1, pull2, end});
-    mState = EnemyState::Attacking;
+    BeginAttack({start, pull1, pull2, end}, target);
     return true;
 }
 

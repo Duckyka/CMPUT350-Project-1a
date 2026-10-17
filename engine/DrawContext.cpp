@@ -41,7 +41,10 @@ void DrawContext::DrawCenteredText(const std::string &text, int pixelSize, Point
         bounds.position.y + bounds.size.y / 2.f
     ));
 
-    sfText.setPosition(sf::Vector2f(p.x,p.y));
+    // Move and turn the text with the object
+    Point2D screenPoint = Transform(p);
+    sfText.setPosition(sf::Vector2f(screenPoint.x, screenPoint.y));
+    sfText.setRotation(sf::radians(mRotation));
 
     mWindow->draw(sfText);
 }
@@ -61,7 +64,11 @@ void DrawContext::DrawText(const std::string &text, int pixelSize, Point2D p, RG
     sfText.setString(text);
     sfText.setCharacterSize(pixelSize);
     sfText.setFillColor(ToSFMLColor(c));
-    sfText.setPosition(sf::Vector2f(p.x,p.y));
+
+    // Move and turn the text with the object
+    Point2D screenPoint = Transform(p);
+    sfText.setPosition(sf::Vector2f(screenPoint.x, screenPoint.y));
+    sfText.setRotation(sf::radians(mRotation));
 
     mWindow->draw(sfText);
 }
@@ -79,7 +86,9 @@ void DrawContext::DrawCircle(Point2D p, float radius, RGBColor c) {
     sf::CircleShape circle(radius);
     circle.setOrigin(sf::Vector2f(radius, radius));
     circle.setFillColor(ToSFMLColor(c));
-    circle.setPosition(sf::Vector2f(p.x, p.y));
+    // Move the center from the object's local space to the screen
+    Point2D center = Transform(p);
+    circle.setPosition(sf::Vector2f(center.x, center.y));
 
     mWindow->draw(circle);
 }
@@ -100,14 +109,12 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
         {r.topLeft.x, r.topLeft.y + r.height}
     };
 
+    // Move and turn each corner, so a rotated object draws a rotated rectangle
     sf::ConvexShape shape(4);
     for (int i = 0; i < 4; i++) {
         Point2D p = Transform(corners[i]);
         shape.setPoint(i, sf::Vector2f(p.x, p.y));
     }
-
-    // sf::RectangleShape rectangle({r.width, r.height});
-    // rectangle.setPosition(sf::Vector2f(r.topLeft.x, r.topLeft.y));
     shape.setFillColor(ToSFMLColor(c));
 
     mWindow->draw(shape);
@@ -123,14 +130,16 @@ void DrawContext::DrawRect(Rect r, RGBColor c) {
 void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
     if (!mWindow) return;
 
-    sf::RectangleShape rectangle({r.width, r.height});
-    rectangle.setPosition(sf::Vector2f(r.topLeft.x, r.topLeft.y));
-    rectangle.setFillColor(sf::Color::Transparent);
-    rectangle.setOutlineColor(ToSFMLColor(c));
-    rectangle.setOutlineThickness(width);
+    Point2D topLeft = r.topLeft;
+    Point2D topRight(r.topLeft.x + r.width, r.topLeft.y);
+    Point2D bottomRight(r.topLeft.x + r.width, r.topLeft.y + r.height);
+    Point2D bottomLeft(r.topLeft.x, r.topLeft.y + r.height);
 
-    mWindow->draw(rectangle);
-
+    // Draw the 4 edges as lines. DrawLine moves and turns them with the object.
+    DrawLine(topLeft, topRight, width, c);
+    DrawLine(topRight, bottomRight, width, c);
+    DrawLine(bottomRight, bottomLeft, width, c);
+    DrawLine(bottomLeft, topLeft, width, c);
 }
 
 /**
@@ -142,11 +151,15 @@ void DrawContext::FrameRect(Rect r, float width, RGBColor c) {
  * @param c The color of the line, specified as an RGBColor object.
  *
  * This function calculates the distance and angle between the two points
- * and uses a polygone shape to represent the line. The line is drawn
- * relative to the world offset and rendered onto the associated window.
+ * and uses a polygon shape to represent the line. The points are in the
+ * object's local space and are moved and turned to the screen first.
  */
 void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
     if (!mWindow) return;
+
+    // Move both ends from the object's local space to the screen
+    from = Transform(from);
+    to = Transform(to);
 
     float deltaX = to.x - from.x;
     float deltaY = to.y - from.y;
@@ -175,23 +188,21 @@ void DrawContext::DrawLine(Point2D from, Point2D to, float width, RGBColor c) {
     line.setFillColor(ToSFMLColor(c));
 
     mWindow->draw(line);
-
-
 }
 
-//Returns the window width
-int DrawContext::GetWindowWidth() { return mWindow->getSize().x; }
+//Returns the width of the game area (the view), not the scaled-down window
+int DrawContext::GetWindowWidth() { return static_cast<int>(mWindow->getView().getSize().x); }
 
-//Returns the window height
-int DrawContext::GetWindowHeight() { return mWindow->getSize().y; }
+//Returns the height of the game area (the view), not the scaled-down window
+int DrawContext::GetWindowHeight() { return static_cast<int>(mWindow->getView().getSize().y); }
 
-// Remebers where the current object is on the screen
+// Remembers where the current object is on the screen
 void DrawContext::SetContextOffset(Point2D p)
 {
     mOffset = p;
 }
 
-// Set the rotation
+// Remembers the current object's rotation in radians
 void DrawContext::SetContextRotation(float rotation)
 {
     mRotation = rotation;
@@ -240,7 +251,7 @@ Point2D DrawContext::ReverseTransform(Point2D p)
 Converts a rectangle from the object's own space to screen space
 
 When a rectangle is turned, it's no longer lined up with the screen edges,
-so it can't be stored as a Rect anymore.
+so this returns the smallest screen-aligned box that fits around it.
 */
 Rect DrawContext::Transform(Rect r)
 {
