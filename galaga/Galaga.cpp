@@ -9,6 +9,7 @@
 #include <string>
 #include "Bezier.h"
 #include "MathUtil.h"
+#include <cstdlib>
 
     // struct Line
     // {
@@ -243,19 +244,30 @@ void Galaga::UpdateGameOver(GameContext* context)
 
 void Galaga::LaunchAttackingEnemy(GameContext* context)
 {
-    for (auto iterator = context->mEngineView->begin(); iterator != context->mEngineView->end(); iterator++)
-    {
-        if (auto enemy = std::dynamic_pointer_cast<Enemy>(*iterator))
-        {
-            // test target: bottom-right corner of the screen
-            CMPUT350::Point2D target(mScreenWidth - 60.0f, mScreenHeight - 60.0f);
-            if (enemy->Attack(context, target)) {
-                break;
-            }
-            // enemy->StartAttackRun();
-            // break;
+    // Gather every enemy that is sitting in formation
+    std::vector<std::shared_ptr<Enemy>> candidates;
+    for (auto& weakEnemy : mEnemies) {
+        auto enemy = weakEnemy.lock();
+        if (enemy && enemy->IsAlive() && enemy->IsInFormation()) {
+            candidates.push_back(enemy);
         }
     }
+
+    if (candidates.empty()) {
+        return;
+    }
+
+    // Pick one at random so it isn't always the same enemy
+    int index = std::rand() % static_cast<int>(candidates.size());
+
+    // Aim at the player if there is one, otherwise the bottom middle
+    CMPUT350::Point2D target(mScreenWidth / 2.0f, mScreenHeight - 60.0f);
+    if (auto player = mPlayer.lock()) {
+        target = player->GetLocation();
+    }
+
+    candidates[index]->Attack(context, target);
+    
 }
 
 void Galaga::ResetGame(GameContext* context)

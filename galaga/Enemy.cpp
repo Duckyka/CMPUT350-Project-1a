@@ -4,7 +4,6 @@
 
 namespace {
     constexpr int kSamplesPerSegment = 100;
-    constexpr float kPathSpeed = 6.0f;
 
     /*
     Sample a chain of cubic bezier segments at t in [0, 1] (from Lab 5)
