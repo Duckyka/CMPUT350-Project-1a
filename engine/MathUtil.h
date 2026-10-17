@@ -255,7 +255,6 @@ struct Line {
         double posY = (p2.y - p1.y) * (p2.y - p1.y);
 
         length = sqrt(posX + posY);
-        //std::cout << "The length is " << length;
         return length;
     }
     Point2D ClosestPoint(const Point2D &p) const {

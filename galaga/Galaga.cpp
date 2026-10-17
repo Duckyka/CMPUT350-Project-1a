@@ -2,6 +2,7 @@
 #include "Bee.h"
 #include "Butterfly.h"
 #include "Boss.h"
+#include "Stars.h"
 #include <Keyboard.h>
 #include <GameObject.h>
 #include <DrawContext.h>
@@ -9,16 +10,21 @@
 #include <string>
 #include "Bezier.h"
 #include "MathUtil.h"
-#include <cstdlib>
+#include <unordered_map>
 
-    // struct Line
-    // {
-    //     float x;
-    //     float y;
-    // };
+namespace {
+    // Points for each enemy death message.
+    // Diving enemies are worth more than enemies in formation.
+    const std::unordered_map<std::string, int> kDeathPoints = {
+        {"BeeDiedFormation", 50},        {"BeeDiedDiving", 100},
+        {"ButterflyDiedFormation", 80},  {"ButterflyDiedDiving", 160},
+        {"BossDiedFormation", 150},      {"BossDiedDiving", 400},
+    };
+}
 
-    // class GameEngine
-
+/*
+Create the game manager. The game starts waiting for a coin.
+*/
 Galaga::Galaga(size_t screenWidth, size_t screenHeight)
     : mScreenWidth(screenWidth),
     mScreenHeight(screenHeight),
@@ -33,25 +39,39 @@ Galaga::Galaga(size_t screenWidth, size_t screenHeight)
     mShipsSpawnedInWave(0),
     mSpawnTimer(0.0f),
     mActiveEnemyCount(0),
-    mAttackCooldown(3.0f) {
-        std::cout << "Initialization of the Galaga Object: TEST TEST\n";
-};
+    mAttackCooldown(3.0f)
+{
+}
 
 Galaga::~Galaga() {}
 
+/*
+Output: true. The game manager stays in the engine for the whole program.
+*/
 bool Galaga::IsAlive() const
 {
     return mIsAlive;
 }
 
+/*
+Switch to a new state and restart the state timer.
+*/
 void Galaga::ChangeState(GameState newState)
 {
     mCurrentState = newState;
     mStateTimer = 0.0f;
 }
 
+/*
+Called once when Galaga is added to the engine.
+Creates the stars, sets up the keys, and registers for the messages Galaga needs.
+*/
 void Galaga::Initialize(GameContext* context)
 {
+    // Star background, stays for the whole game
+    CMPUT350::Rect screen(0.0f, 0.0f, static_cast<float>(mScreenWidth), static_cast<float>(mScreenHeight));
+    context->mEngineView->AddGameObject(std::make_shared<Stars>(250, screen));
+
     context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Num5, "CoinInserted");
     context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::Num1, "StartPressed");
     context->mEngineView->InstallKeyDownNotification(CMPUT350::Key::A, "MoveLeftDown");
@@ -67,17 +87,23 @@ void Galaga::Initialize(GameContext* context)
     std::weak_ptr<GameObject> galagaPtr = shared_from_this();
     context->mNotificationManager->Register(galagaPtr, "CoinInserted");
     context->mNotificationManager->Register(galagaPtr, "StartPressed");
-    context->mNotificationManager->Register(galagaPtr, "EnemyDied");
+    // Listen for every kind of enemy death
+    for (const auto& entry : kDeathPoints) {
+        context->mNotificationManager->Register(galagaPtr, entry.first);
+    }
     context->mNotificationManager->Register(galagaPtr, "PlayerDied");
 }
 
+/*
+Handle coins, the start button, enemy deaths (score) and player deaths (lives).
+*/
 void Galaga::ReceiveNotification(const std::string& message)
 {
     if (mCurrentState == GameState::WaitingForCoins)
     {
         if (message == "CoinInserted")
-        { 
-            mCredits++; 
+        {
+            mCredits++;
         }
         else if (message == "StartPressed" && mCredits > 0)
         {
@@ -86,12 +112,14 @@ void Galaga::ReceiveNotification(const std::string& message)
         }
     }
 
-    bool playing (mCurrentState == GameState::Waves || mCurrentState == GameState::Gameplay);
-    if (message == "EnemyDied" && playing)
+    bool playing = (mCurrentState == GameState::Waves || mCurrentState == GameState::Gameplay);
+    // Look up how many points this enemy death is worth
+    auto points = kDeathPoints.find(message);
+    if (points != kDeathPoints.end() && playing)
     {
-        mScore += 100;
+        mScore += points->second;
         mActiveEnemyCount--;
-    } 
+    }
     else if (message == "PlayerDied" && playing)
     {
         mLives--;
@@ -105,15 +133,18 @@ void Galaga::ReceiveNotification(const std::string& message)
             mWaitingToRespawn = true;
             mRespawnTimer = 0.0f;
         }
-        
     }
 }
 
+/*
+Called every frame. Runs the update for the current state.
+*/
 void Galaga::Update(GameContext* context)
 {
     float deltaTime = 1.0f / 30.0f;
     mStateTimer += deltaTime;
 
+    // Forget enemies that have been removed from the engine
     mEnemies.erase(std::remove_if(mEnemies.begin(), mEnemies.end(),
     [](const std::weak_ptr<GameObject>& weakPointer) { return weakPointer.expired(); }),
     mEnemies.end());
@@ -128,10 +159,16 @@ void Galaga::Update(GameContext* context)
     }
 }
 
+// Nothing to do after collisions
 void Galaga::LateUpdate(GameContext* context) {}
 
+// Waiting for a coin: everything happens in ReceiveNotification
 void Galaga::UpdateWaitingForCoins(GameContext* context) {}
 
+/*
+Startup: on the first frame, reset the level and spawn the player.
+After 3 seconds of showing the level number, start the waves.
+*/
 void Galaga::UpdateStartup(GameContext* context)
 {
     if (mStateTimer <= 1.0f / 30.0f)
@@ -141,7 +178,6 @@ void Galaga::UpdateStartup(GameContext* context)
         if (mPlayer.expired()) {
             SpawnPlayer(context);
         }
-        mWaitingToRespawn = false;
     }
     if (mStateTimer >= 3.0f)
     {
@@ -151,6 +187,10 @@ void Galaga::UpdateStartup(GameContext* context)
     }
 }
 
+/*
+Waves: spawn 5 waves of 8 ships, one ship every 0.4 seconds.
+Once every ship is in formation, move on to Gameplay.
+*/
 void Galaga::UpdateWaves(GameContext* context)
 {
     float deltaTime = 1.0f / 30.0f;
@@ -160,12 +200,11 @@ void Galaga::UpdateWaves(GameContext* context)
     constexpr int kNumWaves = 5;
     if (mCurrentWaveIndex < kNumWaves)
     {
-
         if (mShipsSpawnedInWave < 8 && mSpawnTimer >= 0.4f)
         {
             mSpawnTimer = 0.0f;
 
-            // Each wave filles one row; each ship in the wave takes the next column
+            // Each wave fills one row; each ship in the wave takes the next column
             int row = mCurrentWaveIndex;
             int col = mShipsSpawnedInWave;
 
@@ -198,27 +237,23 @@ void Galaga::UpdateWaves(GameContext* context)
         }
     }
     else
-    {  
-        // All ships have spawned; wait until every one has reached its slot
-        bool allSeated = true;
-        for (auto& weakEnemy: mEnemies) {
-            auto enemy = weakEnemy.lock();
-            if (enemy && !enemy->IsInFormation()) {
-                allSeated = false;
-            }
-        }
-        
-        // Only start attacking once the whole formation is in place
-        if (allSeated) {
+    {
+        // All ships have spawned; start attacking once the whole formation is in place
+        if (AllEnemiesInFormation()) {
             ChangeState(GameState::Gameplay);
         }
     }
 }
 
+/*
+Gameplay: send enemies to attack every few seconds.
+Goes back to Startup when every enemy is destroyed.
+If the player died, wait for enemies to return home, then respawn the player.
+*/
 void Galaga::UpdateGameplay(GameContext* context)
 {
     float deltaTime = 1.0f / 30.0f;
-    
+
     // Level cleared: go to next level
     if (mActiveEnemyCount <= 0) {
         mCurrentLevel++;
@@ -241,7 +276,7 @@ void Galaga::UpdateGameplay(GameContext* context)
         }
         return;
     }
-    
+
     mAttackCooldown -= deltaTime;
     if (mAttackCooldown <= 0.0f)
     {
@@ -250,9 +285,11 @@ void Galaga::UpdateGameplay(GameContext* context)
     }
 }
 
+/*
+Game over: show the message for 5 seconds, then wait for a new coin.
+*/
 void Galaga::UpdateGameOver(GameContext* context)
 {
-    mCurrentLevel = 1;
     if (mStateTimer >= 5.0f)
     {
         mCurrentLevel = 1;
@@ -261,12 +298,15 @@ void Galaga::UpdateGameOver(GameContext* context)
     }
 }
 
+/*
+Send up to 2 enemies from the formation to attack the player.
+*/
 void Galaga::LaunchAttackingEnemy(GameContext* context)
 {
-    // Gather every enemy that is sitting in formation
+    // Gather every enemy in the engine that is sitting in formation
     std::vector<std::shared_ptr<Enemy>> candidates;
-    for (auto& weakEnemy : mEnemies) {
-        auto enemy = weakEnemy.lock();
+    for (const auto& object : *context->mEngineView) {
+        auto enemy = std::dynamic_pointer_cast<Enemy>(object);
         if (enemy && enemy->IsAlive() && enemy->IsInFormation()) {
             candidates.push_back(enemy);
         }
@@ -276,24 +316,36 @@ void Galaga::LaunchAttackingEnemy(GameContext* context)
         return;
     }
 
-    // Pick one at random so it isn't always the same enemy
-    int index = std::rand() % static_cast<int>(candidates.size());
-
     // Aim at the player if there is one, otherwise the bottom middle
     CMPUT350::Point2D target(mScreenWidth / 2.0f, mScreenHeight - 60.0f);
     if (auto player = mPlayer.lock()) {
         target = player->GetLocation();
     }
 
-    candidates[index]->Attack(context, target);
-    
+    // Pick up to 2 enemies in a fixed order. The counter moves the starting
+    // point each attack, and the second pick is half the list away.
+    int count = static_cast<int>(candidates.size());
+    int numToLaunch = std::min(2, count);
+    for (int k = 0; k < numToLaunch; k++) {
+        int index = (mAttackCounter + k * (count / 2)) % count;
+        candidates[index]->Attack(context, target);
+    }
+    mAttackCounter++;
 }
 
+/*
+Clear per-level state. On level 1 (a new game) also reset score and lives.
+Called once at the start of Startup.
+*/
 void Galaga::ResetGame(GameContext* context)
 {
     mEnemies.clear();
     mActiveEnemyCount = 0;
-    if (mCurrentState == GameState::Startup && mCurrentLevel == 1)
+    mSpawnTimer = 0.0f;
+    mAttackCooldown = 3.0f;
+    mWaitingToRespawn = false;
+
+    if (mCurrentLevel == 1)
     {
         mScore = 0;
         mLives = 3;
@@ -328,37 +380,58 @@ std::vector<Point2D> Galaga::GenerateBezierPath(int waveIndex, CMPUT350::Point2D
     return {p0, p1, p2, p3, p4, p5, p6};
 }
 
+/*
+Draw the on-screen text for the current game state.
+Uses the GUI context, so nothing here is moved or rotated by the engine.
+*/
 void Galaga::RenderUI(GameContext* context)
 {
+    auto* gui = context->GUIContext;
+    // Center of the screen; messages here use DrawCenteredText so they line up
+    CMPUT350::Point2D middle(mScreenWidth / 2.0f, mScreenHeight / 2.0f);
+
     if (mCurrentState == GameState::WaitingForCoins)
     {
         // The engine clears the window every frame, so only draw the text that matches the current credits
-        const char* text = (mCredits > 0) ? "START GAME" : "INSERT COIN";
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::white);
+        const char* text = (mCredits > 0) ? "PUSH 1 TO START" : "INSERT COIN";
+        gui->DrawCenteredText(text, 25, middle, CMPUT350::Colors::white);
+        gui->DrawText("CREDIT " + std::to_string(mCredits), 20, CMPUT350::Point2D(30, mScreenHeight - 40.0f), CMPUT350::Colors::white);
+        return;
     }
 
-    else if (mCurrentState == GameState::Startup) {
-        std::string text = "LEVEL " + std::to_string(mCurrentLevel);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, mScreenHeight / 2.0f), CMPUT350::Colors::green);
+    // Once a game has started, the score is always on screen
+    // Label in green, number in white. The engine can't measure text width,
+    // so the number is drawn a fixed distance to the right of the label.
+    CMPUT350::Point2D scoreLoc(mScreenWidth / 2.5f, 20);
+    gui->DrawText("SCORE", 25, scoreLoc, CMPUT350::Colors::green);
+    gui->DrawText(std::to_string(mScore), 25, scoreLoc + CMPUT350::Point2D(kScoreNumberOffset, 0.0f), CMPUT350::Colors::white);
+
+    // Lives tracker: one small ship per spare life (the ship in play isn't counted)
+    if (mCurrentState != GameState::GameOver)
+    {
+        constexpr float kIconSpacing = 45.0f;
+        for (int i = 0; i < mLives - 1; i++)
+        {
+            CMPUT350::Point2D center(35.0f + i * kIconSpacing, mScreenHeight - 35.0f);
+            DrawLifeIcon(gui, center);
+        }
     }
 
-    else if (mCurrentState == GameState::Waves) {
-        std::string text = "SCORE " + std::to_string(mScore);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, 20), CMPUT350::Colors::green);
-        text = "LIVES " + std::to_string(mLives);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(30, mScreenHeight - 30), CMPUT350::Colors::white);
+    // Message for the current state
+    if (mCurrentState == GameState::Startup)
+    {
+        gui->DrawCenteredText("LEVEL " + std::to_string(mCurrentLevel), 25, middle, CMPUT350::Colors::green);
     }
-    
-    else if (mCurrentState == GameState::Gameplay) {
-        std::string text = "SCORE " + std::to_string(mScore);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(mScreenWidth / 2.5f, 20), CMPUT350::Colors::green);
-        text = "LIVES " + std::to_string(mLives);
-        context->ScreenContext->DrawText(text, 25, CMPUT350::Point2D(30, mScreenHeight - 30), CMPUT350::Colors::white);
+    else if (mCurrentState == GameState::Gameplay && mWaitingToRespawn && AllEnemiesInFormation())
+    {
+        // Tell the player how many ships they have left, counting the one about to spawn
+        gui->DrawCenteredText("READY", 25, middle, CMPUT350::Colors::red);
+        std::string livesText = std::to_string(mLives) + (mLives == 1 ? " SHIP LEFT" : " SHIPS LEFT");
+        gui->DrawCenteredText(livesText, 20, middle + CMPUT350::Point2D(0.0f, 40.0f), CMPUT350::Colors::white);
     }
-
-    else if (mCurrentState == GameState::GameOver) {
-        std::string text = "GAME OVER";
-        context->ScreenContext->DrawText(text, 30, CMPUT350::Point2D(mScreenWidth / 3.0f, mScreenHeight / 2.0f), CMPUT350::Colors::red);
+    else if (mCurrentState == GameState::GameOver)
+    {
+        gui->DrawCenteredText("GAME OVER", 30, middle, CMPUT350::Colors::red);
     }
 }
 
@@ -417,4 +490,15 @@ void Galaga::ClearBoard() {
     }
     mEnemies.clear();
     mActiveEnemyCount = 0;
+}
+/*
+Draw a small copy of the player ship (half size) centered on center.
+Used for the lives tracker in the bottom left corner.
+*/
+void Galaga::DrawLifeIcon(CMPUT350::DrawContext* gui, CMPUT350::Point2D center) const
+{
+    // Same rectangles as Player (body, wings, nose), scaled by 0.5
+    gui->DrawRect(CMPUT350::Rect(-10.0f, -10.0f, 20.0f, 20.0f) + center, CMPUT350::Colors::blue);
+    gui->DrawRect(CMPUT350::Rect(-17.5f, 2.5f, 35.0f, 6.0f) + center, CMPUT350::Colors::blue);
+    gui->DrawRect(CMPUT350::Rect(-3.0f, -17.5f, 6.0f, 29.0f) + center, CMPUT350::Colors::blue);
 }

@@ -33,8 +33,7 @@ bool Butterfly::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &
     CMPUT350::Point2D p4 = KeepOnScreen(context, p3 + (p3 - p2));
     CMPUT350::Point2D p5 = KeepOnScreen(context, end + CMPUT350::Point2D(0.0f, -300.0f));
 
-    FollowPath({start, p1, p2, p3, p4, p5, end});
-    mState = EnemyState::Attacking;
+    BeginAttack({start, p1, p2, p3, p4, p5, end}, target);
     return true;
 }
 

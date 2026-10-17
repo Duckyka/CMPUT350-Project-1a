@@ -34,7 +34,7 @@ public:
     virtual void RenderUI(GameContext* context) override;
     virtual bool IsAlive() const override;
 
-    void ReceiveNotification(const std::string& message);
+    void ReceiveNotification(const std::string& message) override;
     
 private:
     void ChangeState(GameState newState);
@@ -52,6 +52,7 @@ private:
     void SpawnPlayer(GameContext* context);
     bool AllEnemiesInFormation() const;
     void ClearBoard();
+    void DrawLifeIcon(CMPUT350::DrawContext* gui, CMPUT350::Point2D center) const;
 
     size_t mScreenWidth;
     size_t mScreenHeight;
@@ -74,8 +75,11 @@ private:
     std::vector<std::weak_ptr<Enemy>> mEnemies;
 
     float mAttackCooldown;
+    // Counts attacks so attackers are picked in a fixed order
+    int mAttackCounter = 0;
     bool mWaitingToRespawn = false;
     float mRespawnTimer = 0.0f;
+    static constexpr float kScoreNumberOffset = 160.0f;
 };
 
 #endif //GALAGA_H

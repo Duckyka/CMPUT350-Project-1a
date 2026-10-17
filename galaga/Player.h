@@ -20,8 +20,6 @@ public:
     void ReceiveNotification(const std::string &message) override;
     bool IsAlive() const override;
     void Kill() override;
-    // bool HandleKeyEvent(CMPUT350::GameContext* context, char key) override;
-    //void ReceiveNotification(const std::string& key) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;

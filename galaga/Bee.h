@@ -10,6 +10,7 @@ public:
 
     bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) override;
     void RenderForeground(CMPUT350::GameContext* context) override;
+    std::string GetTypeName() const override { return "Bee"; }
 };
 
 #endif

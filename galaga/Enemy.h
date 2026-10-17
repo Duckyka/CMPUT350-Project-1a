@@ -4,6 +4,7 @@
 #include "CollisionObject.h"
 #include "GameContext.h"
 #include <vector>
+#include <string>
 
 enum class EnemyState
 {
@@ -25,7 +26,6 @@ public:
     void LateUpdate(CMPUT350::GameContext* context) override;
     bool IsAlive() const override;
     void Kill() override;
-    //void ReceiveNotification(const std::string& key) override;
 
     // Graphics Object Functions
     void RenderBackground(CMPUT350::GameContext* context) override;
@@ -40,7 +40,7 @@ public:
     const std::vector<CMPUT350::Shape>& GetShapes() override;
 
     virtual bool Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &target) = 0;
-    void StartAttackRun();
+    virtual std::string GetTypeName() const = 0;
 
 protected:
     CMPUT350::Rect mBounds;
@@ -64,7 +64,16 @@ protected:
     bool mDeathReported = false;
 
     CMPUT350::Point2D KeepOnScreen(CMPUT350::GameContext* context, CMPUT350::Point2D p) const;
+    int mHealth = 1;
 
+    // Attack and hiring
+    void BeginAttack(const std::vector<CMPUT350::Point2D>& controlPoints, CMPUT350::Point2D target);
+    void TryFire(CMPUT350::GameContext* context);
+    CMPUT350::Point2D mAttackTarget;
+    int mShotsFired = 0;
+    float mPathLength = 0.0f;
+    static constexpr int kShotsPerAttack = 2;
+    
 private:
     bool AdvanceAlongPath();
     void OnPathFinished();

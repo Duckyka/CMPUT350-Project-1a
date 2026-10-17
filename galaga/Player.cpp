@@ -24,8 +24,8 @@ Player::Player(CMPUT350::Point2D loc)
 }
 
 /*
-Called once by the engine wheen the Player is added to the game.
-Left empty because the constructor already sets up all of the Player's state
+Called once by the engine when the Player is added to the game.
+Registers for the key messages that Galaga set up in the engine.
 */
 void Player::Initialize(CMPUT350::GameContext* context)
 {
@@ -34,6 +34,9 @@ void Player::Initialize(CMPUT350::GameContext* context)
     }
 }
 
+/*
+Handle a key message. Holding a move key keeps the ship moving until it is released.
+*/
 void Player::ReceiveNotification(const std::string &message) {
     if (message == "MoveLeftDown") {
         mMovingLeft = true;
@@ -83,7 +86,8 @@ void Player::Update(CMPUT350::GameContext* context)
                     mLocation.x, mLocation.y + ShipFrontBounds.topLeft.y - 5.0f);
                 CMPUT350::Point2D direction(0.0f, -1.0f);
 
-                auto bullet = std::make_shared<Bullet>(firePosition, direction, true);
+                // The player is the parent, so its bullets die with it
+                auto bullet = std::make_shared<Bullet>(firePosition, direction, true, context->CurrObject);
                 slot = bullet;
                 context->mEngineView->AddGameObject(bullet);
 
@@ -107,53 +111,6 @@ void Player::LateUpdate(CMPUT350::GameContext* context)
         context->mNotificationManager->Notify("PlayerDied");
     }
 }
-
-/*
-Handle a key press sent by the engine.
-Input: context - gives access to the screen size
-       key - the ASCII character that was pressed
-Output: true if the Player used the key, false otherwise
-        'a' moves left and 'd' moves right (10 pixels, kept on screen)
-        ' ' only sets mFireRequested, the bullet is created in Update.
-*/
-/*
-bool Player::HandleKeyEvent(CMPUT350::GameContext* context, char key)
-{
-    if (key == 'a')
-    {
-        //std::cout << context->ScreenContext->GetWindowWidth() << "\n";
-        if (mBounds.topLeft.x > 0)
-        {
-            mBounds.topLeft.x -= 10;
-            shipWingBounds.topLeft.x -= 10;
-            ShipFrontBounds.topLeft.x -= 10;
-            return true;
-        }
-        else { return false; }
-    }
-    else if (key == 'd')
-    {
-        if (mBounds.topLeft.x < (context->ScreenContext->GetWindowWidth() - 40))
-        {
-            mBounds.topLeft.x += 10;
-            shipWingBounds.topLeft.x += 10;
-            ShipFrontBounds.topLeft.x += 10;
-            return true;
-        }
-        else { return false; }
-    }
-    else if (key == ' ')
-    {
-        mFireRequested = true;
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    
-}
-*/
 
 /*
 Draw anything that must appear behind other objects.
@@ -233,12 +190,14 @@ bool Player::IsAlive() const
 }
 
 /*
-Output: the Player's main bounding box (the body). The engine uses it
-        for collision checks. The wings and nose are not included.
+Output: a screen-space box around the whole ship (body, wings and nose).
+        The engine checks this box first, so it must cover every shape.
 */
 const CMPUT350::Rect& Player::GetBounds()
 {
     mWorldBounds = mBounds + mLocation;
+    mWorldBounds |= shipWingBounds + mLocation;
+    mWorldBounds |= ShipFrontBounds + mLocation;
     return mWorldBounds;
 }
 

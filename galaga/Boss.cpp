@@ -2,6 +2,8 @@
 
 Boss::Boss(CMPUT350::Point2D loc, const std::vector<CMPUT350::Point2D>& entryPath) : Enemy(loc, entryPath)
 {
+    // Bosses take 2 hits
+    mHealth = 2;
 }
 
 /*
@@ -42,8 +44,7 @@ bool Boss::Attack(CMPUT350::GameContext *context, const CMPUT350::Point2D &targe
       CMPUT350::Point2D p7 = KeepOnScreen(context, weave2 + down);
       CMPUT350::Point2D p8 = KeepOnScreen(context, end + up);
 
-      FollowPath({start, p1, p2, weave1, p4, p5, weave2, p7, p8, end});
-      mState = EnemyState::Attacking;
+      BeginAttack({start, p1, p2, weave1, p4, p5, weave2, p7, p8, end}, target);
       return true;
 }
 
@@ -52,5 +53,7 @@ Draw the Boss
 */
 void Boss::RenderForeground(CMPUT350::GameContext* context)
 {
-    context->ScreenContext->DrawRect(mBounds, CMPUT350::Colors::green);
+    // Green at full health, magenta after being hit once
+    CMPUT350::RGBColor color = (mHealth >= 2) ? CMPUT350::Colors::green : CMPUT350::Colors::magenta;
+    context->ScreenContext->DrawRect(mBounds, color);
 }

@@ -1,40 +1,11 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "Bezier.h"
 
 namespace {
+    // How many points to sample from each bezier segment
     constexpr int kSamplesPerSegment = 100;
-
-    /*
-    Sample a chain of cubic bezier segments at t in [0, 1] (from Lab 5)
-    pts must hold 3n + 1 points: segment k uses pts[3k] .. pts[3k + 3]
-    */
-    CMPUT350::Point2D GetBezierPoint(const std::vector<CMPUT350::Point2D>& pts, float t)
-    {
-        // Find which segment t falls in, and resize t to [0,1]
-        int numSegments = (static_cast<int>(pts.size()) - 1) / 3;
-        float scaled = t * numSegments;
-        int seg = static_cast<int>(scaled);
-        if (seg >= numSegments) {
-            // when t == 1
-            seg = numSegments - 1;
-        }
-        float localT = scaled - seg;
-        int base = seg * 3;
-
-        // B(t) = (1−t)^3xP0 + 3(1−t)^2txP1 + 3(1−t)t^2xP2 + t^3xP3
-        float u = 1.0f - localT;
-
-        float b0 = u * u * u;
-        float b1 = 3.0f * u * u * localT;
-        float b2 = 3.0f * u * localT * localT;
-        float b3 = localT * localT * localT;
-
-        return CMPUT350::Point2D(
-            b0 * pts[base].x + b1 * pts[base + 1].x + b2 * pts[base + 2].x + b3 * pts[base + 3].x,
-            b0 * pts[base].y + b1 * pts[base + 1].y + b2 * pts[base + 2].y + b3 * pts[base + 3].y
-        );
-    }
 }
 
 /*
@@ -72,13 +43,18 @@ void Enemy::Update(CMPUT350::GameContext* context)
             // Sway left and right around the slot
             mLocation = mFormationLocation + CMPUT350::Point2D(std::sin(context->currentFrame * 0.03f) * 20.0f, 0.0f);
             break;
-        case EnemyState::Entering:
         case EnemyState::Attacking:
+            TryFire(context);
+            if (AdvanceAlongPath()) {
+                OnPathFinished();
+            }
+            break;
+        case EnemyState::Entering:
         case EnemyState::Returning:
             if (AdvanceAlongPath()) {
                 OnPathFinished();
             }
-            break;        
+            break;
     }
 }
 
@@ -152,7 +128,8 @@ void Enemy::LateUpdate(CMPUT350::GameContext* context)
     if (!mAlive && !mDeathReported) {
         // Only report once, even if the enemy was hit by two things in one frame
         mDeathReported = true;
-        context->mNotificationManager->Notify("EnemyDied");
+        std::string where = IsInFormation() ? "DiedFormation" : "DiedDiving";
+        context->mNotificationManager->Notify(GetTypeName() + where);
     }
 }
 
@@ -180,15 +157,25 @@ float Enemy::GetRotation() const
 }
 
 /*
-If a player bullet or the player itself touches the Enemy's bounding box,
-the Enemy is destroyed.
+A player bullet takes away 1 health; the Enemy is destroyed at 0 health.
+Touching the player destroys the Enemy right away.
 Everything else (other enemies, enemy bullets) is ignored.
 */
 void Enemy::CollisionEnter(const std::shared_ptr<CMPUT350::CollisionObject>& obj)
 {
+    // Already dead this frame, nothing more to do
+    if (!mAlive) {
+        return;
+    }
+
+    // A player bullet takes away 1 health
     auto bullet = std::dynamic_pointer_cast<Bullet>(obj);
     if (bullet && bullet->IsPlayerBullet()) {
-        Kill();
+        mHealth--;
+        if (mHealth <= 0) {
+            Kill();
+        }
+        return;
     }
 
     // Flying into the player also destroys the enemy
@@ -252,9 +239,45 @@ CMPUT350::Point2D Enemy::KeepOnScreen(CMPUT350::GameContext* context, CMPUT350::
     return CMPUT350::Point2D(std::clamp(p.x, margin, maxX), std::clamp(p.y, margin, maxY));
 }
 
-void Enemy::StartAttackRun()
+/*
+Start flying along an attack path toward target.
+Subclasses build the control points, then call this from Attack().
+*/
+void Enemy::BeginAttack(const std::vector<CMPUT350::Point2D>& controlPoints, CMPUT350::Point2D target)
 {
+    FollowPath(controlPoints);
+    mAttackTarget = target;
+    mShotsFired = 0;
+    mState = EnemyState::Attacking;
+}
 
+/*
+Fire at the target when the enemy is 20% and 40% of the way along its attack path.
+*/
+void Enemy::TryFire(CMPUT350::GameContext* context)
+{
+    // Already fired every shot for this attack
+    if (mShotsFired >= kShotsPerAttack || mPathLength <= 0.0f) {
+        return;
+    }
+
+    // Not far enough along the path for the next shot yet
+    float fireAt = mPathLength * 0.2f * (mShotsFired + 1);
+    if (mPathDistance < fireAt) {
+        return;
+    }
+
+    // Fire from just below the enemy, toward the target
+    CMPUT350::Point2D firePosition = mLocation + CMPUT350::Point2D(0.0f, kEnemyHeight);
+    CMPUT350::Point2D heading = mAttackTarget - firePosition;
+    if (heading.y <= 0.0f) {
+        // Target is above, so shoot straight down instead
+        heading = CMPUT350::Point2D(0.0f, 1.0f);
+    }
+
+    // This enemy is the parent, so its bullets die with it
+    context->mEngineView->AddGameObject(std::make_shared<Bullet>(firePosition, heading, false, context->CurrObject));
+    mShotsFired++;
 }
 
 /*
@@ -268,13 +291,21 @@ void Enemy::FollowPath(const std::vector<CMPUT350::Point2D>& controlPoints)
         return;
     }
 
-    int numSegments = (static_cast<int>(controlPoints.size()) - 1) / 3;
+    Bezier curve(controlPoints);
+    int numSegments = Bezier::GetNumSegments(controlPoints);
     int samples = kSamplesPerSegment * numSegments;
 
+    // Sample the curve; t goes from 0 to numSegments
     mPath.clear();
     for (int i = 0; i <= samples; i++) {
-        float t = static_cast<float>(i) / samples;
-        mPath.push_back(GetBezierPoint(controlPoints, t));
+        float t = static_cast<float>(i) / kSamplesPerSegment;
+        mPath.push_back(curve.GetPoint(t));
+    }
+
+    // Total Length of the path, used to decide when to fire
+    mPathLength = 0.0f;
+    for (size_t i = 0; i + 1 < mPath.size(); ++i) {
+        mPathLength += mPath[i].Distance(mPath[i + 1]);
     }
 
     mPathDistance = 0.0f;

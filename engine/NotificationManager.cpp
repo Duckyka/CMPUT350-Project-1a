@@ -25,14 +25,6 @@ namespace CMPUT350 {
             }
         }
         list.push_back(object);
-
-        // else
-        // {
-        //     auto toDelete = std::find(mListeners[key].begin(), mListeners[key].end(), object);
-        //     int intToDelete = std::distance(mListeners[key].begin(), toDelete);
-        //     mListeners[key].at(intToDelete) = mListeners[key].back();
-        //     mListeners[key].pop_back();
-        // }
     }
     
     void NotificationManager::Unregister(std::weak_ptr<GameObject> object, const std::string& key)
