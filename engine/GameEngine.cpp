@@ -90,16 +90,7 @@ namespace CMPUT350 {
         context.ScreenContext = mDrawContext.get();
         context.GUIContext = mGUIContext.get();
         context.mNotificationManager = &notificationManager;
-        context.currentFrame = 0;       //Frame 0 or 1 to start??
-        
-        // for (auto &obj : mGameObjects)
-        // {
-        //     auto g = std::dynamic_pointer_cast<Galaga>(obj);
-        //     if (g)
-        //     {
-        //         obj
-        //     }
-        // }
+        context.currentFrame = 0;
 
         while (mWindow->isOpen())  // window is open
         {
@@ -150,42 +141,6 @@ namespace CMPUT350 {
                     sendNotification(mKeyUpNotifications, static_cast<int>(key->scancode));
                 }
             }
-            
-            // while (const std::optional event = mWindow->pollEvent())
-            // {
-            //     if (event->is<sf::Event::Closed>())
-            //     {
-            //        mWindow->close();
-            //     }
-            //     else
-            //     {
-                    // std::string Shoot = "Shoot";
-                    // std::string Left = "MoveLeft";
-                    // std::string Right = "MoveRight";
-                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space))
-                    // {
-                    //     InstallKeyDownNotification(Key::Space, Shoot);
-                    // }
-
-                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::A))
-                    // {
-                    //     InstallKeyDownNotification(Key::A, Left);
-                    // }
-                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Left))
-                    // {
-                    //     InstallKeyDownNotification(Key::Left, Left);
-                    // }
-
-                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::D))
-                    // {
-                    //     InstallKeyDownNotification(Key::D, Right);
-                    // }
-                    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Right))
-                    // {
-                    //     InstallKeyDownNotification(Key::Right, Right);
-                    // }
-            //     }
-            // }
 
             // 3. Update game objects
             for (auto object: mGameObjects)
@@ -319,12 +274,6 @@ namespace CMPUT350 {
                 context.CurrObject = object;
                 object->LateUpdate(&context);
             }
-
-            // 6. Get offsets and rotations
-            // for (auto &object: mGameObjects)
-            //{
-            //
-            //}
 
             // Clear window
             mWindow->clear();

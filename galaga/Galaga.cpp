@@ -11,14 +11,6 @@
 #include "MathUtil.h"
 #include <cstdlib>
 
-    // struct Line
-    // {
-    //     float x;
-    //     float y;
-    // };
-
-    // class GameEngine
-
 Galaga::Galaga(size_t screenWidth, size_t screenHeight)
     : mScreenWidth(screenWidth),
     mScreenHeight(screenHeight),
