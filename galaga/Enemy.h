@@ -51,7 +51,7 @@ protected:
     bool mAlive = true;
     static constexpr float kEnemyWidth = 40.0f;
     static constexpr float kEnemyHeight = 30.0f;
-
+    static constexpr float kPathSpeed = 12.0f;
 
     void FollowPath(const std::vector<CMPUT350::Point2D>& controlPoints);
     std::vector<CMPUT350::Point2D> mPath;
